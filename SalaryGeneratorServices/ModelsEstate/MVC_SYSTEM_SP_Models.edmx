@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FASOPMSESTSEMENANJUNGModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="sp_DistinctKerjaInfoDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="Month" Type="int" Mode="In" />
+          <Parameter Name="NegaraID" Type="int" Mode="In" />
+          <Parameter Name="SyarikatID" Type="int" Mode="In" />
+          <Parameter Name="WilayahID" Type="int" Mode="In" />
+          <Parameter Name="LadangID" Type="int" Mode="In" />
+          <Parameter Name="Division" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="FASOPMSESTSEMENANJUNGModelStoreContainer" />
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FASOPMSESTSEMENANJUNGModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="sp_DistinctKerjaInfoDetails" ReturnType="Collection(FASOPMSESTSEMENANJUNGModel.sp_DistinctKerjaInfoDetails_Result)">
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Month" Mode="In" Type="Int32" />
+            <Parameter Name="NegaraID" Mode="In" Type="Int32" />
+            <Parameter Name="SyarikatID" Mode="In" Type="Int32" />
+            <Parameter Name="WilayahID" Mode="In" Type="Int32" />
+            <Parameter Name="LadangID" Mode="In" Type="Int32" />
+            <Parameter Name="Division" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="sp_DistinctKerjaInfoDetails_Result">
+          <Property Type="Int32" Name="fld_ID" Nullable="false" />
+          <Property Type="String" Name="fld_JnisAktvt" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="fld_KodAktvt" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="fld_JnsPkt" Nullable="true" />
+          <Property Type="String" Name="fld_KodPkt" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="fld_KodGL" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="fld_GLKod" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="fld_KodAktivitiSAP" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="fld_NNCC" Nullable="true" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FASOPMSESTSEMENANJUNGModelStoreContainer" CdmEntityContainer="Entities" >
+          <FunctionImportMapping FunctionImportName="sp_DistinctKerjaInfoDetails" FunctionName="FASOPMSESTSEMENANJUNGModel.Store.sp_DistinctKerjaInfoDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FASOPMSESTSEMENANJUNGModel.sp_DistinctKerjaInfoDetails_Result">
+                <ScalarProperty Name="fld_ID" ColumnName="fld_ID" />
+                <ScalarProperty Name="fld_JnisAktvt" ColumnName="fld_JnisAktvt" />
+                <ScalarProperty Name="fld_KodAktvt" ColumnName="fld_KodAktvt" />
+                <ScalarProperty Name="fld_JnsPkt" ColumnName="fld_JnsPkt" />
+                <ScalarProperty Name="fld_KodPkt" ColumnName="fld_KodPkt" />
+                <ScalarProperty Name="fld_KodGL" ColumnName="fld_KodGL" />
+                <ScalarProperty Name="fld_GLKod" ColumnName="fld_GLKod" />
+                <ScalarProperty Name="fld_KodAktivitiSAP" ColumnName="fld_KodAktivitiSAP" />
+                <ScalarProperty Name="fld_NNCC" ColumnName="fld_NNCC" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

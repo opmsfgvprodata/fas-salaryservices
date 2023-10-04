@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{829C0E30-BD97-47E5-9700-2FA364F25185}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SalaryGeneratorServices</RootNamespace>
+    <AssemblyName>SalaryGeneratorServices</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FuncClass\DateTimeFunc.cs" />
+    <Compile Include="FuncClass\GetConnectFunc.cs" />
+    <Compile Include="FuncClass\INIReaderFunc.cs" />
+    <Compile Include="FuncClass\LogFunc.cs" />
+    <Compile Include="FuncClass\RemoveDataFunc.cs" />
+    <Compile Include="FuncClass\Step1Func.cs" />
+    <Compile Include="FuncClass\Step2Func.cs" />
+    <Compile Include="FuncClass\Step3Func.cs" />
+    <Compile Include="FuncClass\Step4Func.cs" />
+    <Compile Include="FuncClass\Step5Func.cs" />
+    <Compile Include="ModelsCustom\CustMod_General.cs" />
+    <Compile Include="ModelsCustom\CustMod_MonthYearList.cs" />
+    <Compile Include="ModelsCustom\CustMod_WorkerPaidLeave.cs" />
+    <Compile Include="ModelsCustom\CustMod_WorkSCTrans.cs" />
+    <Compile Include="ModelsEstate\C__MigrationHistory.cs" />
+    <Compile Include="ModelsEstate\GenSalaryModelEstate.cs" />
+    <Compile Include="ModelsEstate\MVC_SYSTEM_SP_Models.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MVC_SYSTEM_SP_Models.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ModelsEstate\MVC_SYSTEM_SP_Models.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MVC_SYSTEM_SP_Models.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ModelsEstate\MVC_SYSTEM_SP_Models.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MVC_SYSTEM_SP_Models.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ModelsEstate\sp_DistinctKerjaInfoDetails_Result.cs">
+      <DependentUpon>MVC_SYSTEM_SP_Models.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ModelsEstate\tblHtmlReport.cs" />
+    <Compile Include="ModelsEstate\tblStatusPkj.cs" />
+    <Compile Include="ModelsEstate\tbl_AktvtKerja.cs" />
+    <Compile Include="ModelsEstate\tbl_Blok.cs" />
+    <Compile Include="ModelsEstate\tbl_ByrCarumanTambahan.cs" />
+    <Compile Include="ModelsEstate\tbl_CutiDiambil.cs" />
+    <Compile Include="ModelsEstate\tbl_CutiPeruntukan.cs" />
+    <Compile Include="ModelsEstate\tbl_GajiBulanan.cs" />
+    <Compile Include="ModelsEstate\tbl_HasilSawitBlok.cs" />
+    <Compile Include="ModelsEstate\tbl_HasilSawitPkt.cs" />
+    <Compile Include="ModelsEstate\tbl_HasilSawitSubPkt.cs" />
+    <Compile Include="ModelsEstate\tbl_HutangPekerjaJumlah.cs" />
+    <Compile Include="ModelsEstate\tbl_SpecialInsentif.cs" />
+    <Compile Include="ModelsEstate\tbl_Insentif.cs" />
+    <Compile Include="ModelsEstate\tbl_Kerja.cs" />
+    <Compile Include="ModelsEstate\tbl_KerjaBonus.cs" />
+    <Compile Include="ModelsEstate\tbl_Kerjahdr.cs" />
+    <Compile Include="ModelsEstate\tbl_KerjahdrCuti.cs" />
+    <Compile Include="ModelsEstate\tbl_KerjahdrCutiTahunan.cs" />
+    <Compile Include="ModelsEstate\tbl_KerjaOT.cs" />
+    <Compile Include="ModelsEstate\tbl_KumpulanKerja.cs" />
+    <Compile Include="ModelsEstate\tbl_LogDetail.cs" />
+    <Compile Include="ModelsEstate\tbl_Photo.cs" />
+    <Compile Include="ModelsEstate\tbl_PkjCarumanTambahan.cs" />
+    <Compile Include="ModelsEstate\tbl_PkjIncrmntSalary.cs" />
+    <Compile Include="ModelsEstate\tbl_Pkjmast.cs" />
+    <Compile Include="ModelsEstate\tbl_PktUtama.cs" />
+    <Compile Include="ModelsEstate\tbl_Produktiviti.cs" />
+    <Compile Include="ModelsEstate\tbl_SAPPostDataDetails.cs" />
+    <Compile Include="ModelsEstate\tbl_SAPPostRef.cs" />
+    <Compile Include="ModelsEstate\tbl_Sctran.cs" />
+    <Compile Include="ModelsEstate\tbl_ServicesList.cs" />
+    <Compile Include="ModelsEstate\tbl_SevicesProcess.cs" />
+    <Compile Include="ModelsEstate\tbl_SevicesProcessHistory.cs" />
+    <Compile Include="ModelsEstate\tbl_Skb.cs" />
+    <Compile Include="ModelsEstate\tbl_SubPkt.cs" />
+    <Compile Include="ModelsEstate\tbl_TutupUrusNiaga.cs" />
+    <Compile Include="ModelsEstate\vw_GajiBulananPekerja.cs" />
+    <Compile Include="ModelsEstate\vw_HasilSawitBlok.cs" />
+    <Compile Include="ModelsEstate\vw_HasilSawitPkt.cs" />
+    <Compile Include="ModelsEstate\vw_HasilSawitSubPkt.cs" />
+    <Compile Include="ModelsEstate\vw_InsentifPekerja.cs" />
+    <Compile Include="ModelsEstate\vw_KerjaDetailScTrans.cs" />
+    <Compile Include="ModelsEstate\vw_Kerjahdr.cs" />
+    <Compile Include="ModelsEstate\vw_KerjaInfoDetails.cs" />
+    <Compile Include="ModelsEstate\vw_KerjaPekerja.cs" />
+    <Compile Include="ModelsEstate\vw_Kerja_Bonus.cs" />
+    <Compile Include="ModelsEstate\vw_Kerja_Hdr_Cuti.cs" />
+    <Compile Include="ModelsEstate\vw_Kerja_OT.cs" />
+    <Compile Include="ModelsEstate\vw_KumpulanKerja.cs" />
+    <Compile Include="ModelsEstate\vw_KumpulanPekerja.cs" />
+    <Compile Include="ModelsEstate\vw_MaklumatCuti.cs" />
+    <Compile Include="ModelsEstate\vw_MaklumatInsentif.cs" />
+    <Compile Include="ModelsEstate\vw_MaklumatProduktiviti.cs" />
+    <Compile Include="ModelsEstate\vw_RptSctran.cs" />
+    <Compile Include="ModelsHQ\C__MigrationHistory.cs" />
+    <Compile Include="ModelsHQ\GenSalaryModelHQ.cs" />
+    <Compile Include="ModelsHQ\tblAktiviti.cs" />
+    <Compile Include="ModelsHQ\tblASCApprovalFileDetail.cs" />
+    <Compile Include="ModelsHQ\tblASCApprovalRawData.cs" />
+    <Compile Include="ModelsHQ\tblClient.cs" />
+    <Compile Include="ModelsHQ\tblConnection.cs" />
+    <Compile Include="ModelsHQ\tblDataEntryList.cs" />
+    <Compile Include="ModelsHQ\tblEmailList.cs" />
+    <Compile Include="ModelsHQ\tblEmailNotiStatu.cs" />
+    <Compile Include="ModelsHQ\tblHtmlReport.cs" />
+    <Compile Include="ModelsHQ\tblMaintenanceList.cs" />
+    <Compile Include="ModelsHQ\tblMenuList.cs" />
+    <Compile Include="ModelsHQ\tblNgrSmbrSyrkt.cs" />
+    <Compile Include="ModelsHQ\tblOptionConfigsWeb.cs" />
+    <Compile Include="ModelsHQ\tblPkjmastApp.cs" />
+    <Compile Include="ModelsHQ\tblReportExport.cs" />
+    <Compile Include="ModelsHQ\tblReportList.cs" />
+    <Compile Include="ModelsHQ\tblRole.cs" />
+    <Compile Include="ModelsHQ\tblRoleReport.cs" />
+    <Compile Include="ModelsHQ\tblSokPermhnWangHisAction.cs" />
+    <Compile Include="ModelsHQ\tblSubMenuList.cs" />
+    <Compile Include="ModelsHQ\tblSubReportList.cs" />
+    <Compile Include="ModelsHQ\tblSystemConfig.cs" />
+    <Compile Include="ModelsHQ\tblTaskRemainder.cs" />
+    <Compile Include="ModelsHQ\tblTKABatch.cs" />
+    <Compile Include="ModelsHQ\tblTKADetail.cs" />
+    <Compile Include="ModelsHQ\tblUser.cs" />
+    <Compile Include="ModelsHQ\tblUserIDApp.cs" />
+    <Compile Include="ModelsHQ\tbl_ASCRawData.cs" />
+    <Compile Include="ModelsHQ\tbl_ASCRawDataDetail.cs" />
+    <Compile Include="ModelsHQ\tbl_AuditTrail.cs" />
+    <Compile Include="ModelsHQ\tbl_Bank.cs" />
+    <Compile Include="ModelsHQ\tbl_CarumanTambahan.cs" />
+    <Compile Include="ModelsHQ\tbl_CustomerVendorGLMap.cs" />
+    <Compile Include="ModelsHQ\tbl_CutiKategori.cs" />
+    <Compile Include="ModelsHQ\tbl_CutiMaintenance.cs" />
+    <Compile Include="ModelsHQ\tbl_CutiUmum.cs" />
+    <Compile Include="ModelsHQ\tbl_EstateSelection.cs" />
+    <Compile Include="ModelsHQ\tbl_HargaSawitRange.cs" />
+    <Compile Include="ModelsHQ\tbl_HargaSawitSemasa.cs" />
+    <Compile Include="ModelsHQ\tbl_HariBekerja.cs" />
+    <Compile Include="ModelsHQ\tbl_JadualCarumanTambahan.cs" />
+    <Compile Include="ModelsHQ\tbl_JenisAktiviti.cs" />
+    <Compile Include="ModelsHQ\tbl_JenisCaruman.cs" />
+    <Compile Include="ModelsHQ\tbl_JenisInsentif.cs" />
+    <Compile Include="ModelsHQ\tbl_KumpulanSyarikat.cs" />
+    <Compile Include="ModelsHQ\tbl_Kwsp.cs" />
+    <Compile Include="ModelsHQ\tbl_Ladang.cs" />
+    <Compile Include="ModelsHQ\tbl_Lejar.cs" />
+    <Compile Include="ModelsHQ\tbl_ListASCFile.cs" />
+    <Compile Include="ModelsHQ\tbl_LogDetail.cs" />
+    <Compile Include="ModelsHQ\tbl_MapGL.cs" />
+    <Compile Include="ModelsHQ\tbl_MasterPkj.cs" />
+    <Compile Include="ModelsHQ\tbl_MingguNegeri.cs" />
+    <Compile Include="ModelsHQ\tbl_Negara.cs" />
+    <Compile Include="ModelsHQ\tbl_OptionConfig.cs" />
+    <Compile Include="ModelsHQ\tbl_Pembekal.cs" />
+    <Compile Include="ModelsHQ\tbl_PerluLadang.cs" />
+    <Compile Include="ModelsHQ\tbl_PerluLadangHistory.cs" />
+    <Compile Include="ModelsHQ\tbl_Poskod.cs" />
+    <Compile Include="ModelsHQ\tbl_QuotaPerluLadang.cs" />
+    <Compile Include="ModelsHQ\tbl_QuotaPerluLadangHistory.cs" />
+    <Compile Include="ModelsHQ\tbl_SAPCCPUP.cs" />
+    <Compile Include="ModelsHQ\tbl_SAPCustomerPUP.cs" />
+    <Compile Include="ModelsHQ\tbl_SAPCUSTOMPUP.cs" />
+    <Compile Include="ModelsHQ\tbl_SAPGLPUP.cs" />
+    <Compile Include="ModelsHQ\tbl_SAPLogPUP.cs" />
+    <Compile Include="ModelsHQ\tbl_SAPPDPUP.cs" />
+    <Compile Include="ModelsHQ\tbl_SAPVendorPUP.cs" />
+    <Compile Include="ModelsHQ\tbl_ServicesList.cs" />
+    <Compile Include="ModelsHQ\tbl_SevicesProcess.cs" />
+    <Compile Include="ModelsHQ\tbl_SevicesProcessHistory.cs" />
+    <Compile Include="ModelsHQ\tbl_Socso.cs" />
+    <Compile Include="ModelsHQ\tbl_SokPermhnWang.cs" />
+    <Compile Include="ModelsHQ\tbl_SubCarumanTambahan.cs" />
+    <Compile Include="ModelsHQ\tbl_SuperAdminSelection.cs" />
+    <Compile Include="ModelsHQ\tbl_Syarikat.cs" />
+    <Compile Include="ModelsHQ\tbl_Upah.cs" />
+    <Compile Include="ModelsHQ\tbl_UpahAktiviti.cs" />
+    <Compile Include="ModelsHQ\tbl_UpahMenuai.cs" />
+    <Compile Include="ModelsHQ\tbl_UploadedCountDetail.cs" />
+    <Compile Include="ModelsHQ\tbl_Wilayah.cs" />
+    <Compile Include="ModelsHQ\vw_CutiUmumNegeri.cs" />
+    <Compile Include="ModelsHQ\vw_GLDetails.cs" />
+    <Compile Include="ModelsHQ\vw_NSWL.cs" />
+    <Compile Include="ModelsHQ\vw_NSWL_2.cs" />
+    <Compile Include="ModelsHQ\vw_Socso.cs" />
+    <Compile Include="ProjectInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProjectInstaller.Designer.cs">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Service1.Designer.cs">
+      <DependentUpon>Service1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="ModelsEstate\MVC_SYSTEM_SP_Models.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MVC_SYSTEM_SP_Models.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ModelsEstate\MVC_SYSTEM_SP_Models.edmx.diagram">
+      <DependentUpon>MVC_SYSTEM_SP_Models.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ProjectInstaller.resx">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ModelsEstate\MVC_SYSTEM_SP_Models.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MVC_SYSTEM_SP_Models.edmx</DependentUpon>
+      <LastGenOutput>MVC_SYSTEM_SP_Models.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="ModelsEstate\MVC_SYSTEM_SP_Models.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MVC_SYSTEM_SP_Models.edmx</DependentUpon>
+      <LastGenOutput>MVC_SYSTEM_SP_Models.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
