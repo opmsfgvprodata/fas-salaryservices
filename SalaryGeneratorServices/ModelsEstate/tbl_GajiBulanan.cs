@@ -125,5 +125,8 @@ namespace SalaryGeneratorServices.ModelsEstate
         //added by faeza 09.06.2021
         [StringLength(15)]
         public string fld_PaymentMode { get; set; }
+
+        [Column(TypeName = "numeric")]
+        public decimal? fld_BakiCutiTahunan { get; set; }
     }
 }

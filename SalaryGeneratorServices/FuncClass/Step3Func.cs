@@ -91,9 +91,9 @@ namespace SalaryGeneratorServices.FuncClass
 
             GajiBulanan = db2.tbl_GajiBulanan.Find(Guid);
             await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 22, WorkingPaymentORP, DTProcess, UserID, GajiBulanan);
-            
+
             db2.Dispose();
-            return WorkingPaymentORP;            
+            return WorkingPaymentORP;
         }
 
         public async Task<decimal?> GetAveragePaidFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, List<tblOptionConfigsWeb> tblOptionConfigsWebs, List<tbl_Kerjahdr> tbl_Kerjahdr, List<tbl_Kerjahdr> tbl_KerjahdrYearly)
@@ -145,11 +145,11 @@ namespace SalaryGeneratorServices.FuncClass
             {
                 //if (Month >= 1 && Month <= 10)
                 //{
-                    TotalSalaryBeforeORP = db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && (x.fld_Month >= 1 && x.fld_Month <= 10) && x.fld_Year == Year).Sum(s => s.fld_ByrKerja);
+                TotalSalaryBeforeORP = db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && (x.fld_Month >= 1 && x.fld_Month <= 10) && x.fld_Year == Year).Sum(s => s.fld_ByrKerja);
                 //}
                 //else
                 //{
-                    TotalSalaryAfterORP = db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && (x.fld_Month >= 11 && x.fld_Month <= 12) && x.fld_Year == Year).Sum(s => s.fld_TotalByrKerjaORP);
+                TotalSalaryAfterORP = db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && (x.fld_Month >= 11 && x.fld_Month <= 12) && x.fld_Year == Year).Sum(s => s.fld_TotalByrKerjaORP);
 
                 //}
                 TotalSalary = TotalSalaryBeforeORP + TotalSalaryAfterORP;
@@ -572,7 +572,7 @@ namespace SalaryGeneratorServices.FuncClass
 
                     db2.tbl_Insentif.Add(tbl_Insentif2);
                     db2.SaveChanges();
-                    
+
                     HutangPekerja.fld_JumlahBayar = DeductCompanyInsentifCollection + TotalDeductionCompany;
                     db2.Entry(HutangPekerja).State = EntityState.Modified;
                     await db2.SaveChangesAsync();
@@ -589,7 +589,7 @@ namespace SalaryGeneratorServices.FuncClass
                 db.Dispose();
                 db2.Dispose();
             }
-            
+
             return TotalDeductionCompany;
         }
 
@@ -1082,7 +1082,10 @@ namespace SalaryGeneratorServices.FuncClass
             //AverageSalary = db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Year == LastSelectMonthDate.Year && x.fld_Month == LastSelectMonthDate.Month).Select(s => s.fld_PurataGaji).FirstOrDefault();
             //AverageSalary = AverageSalary == null ? db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Year == Year && x.fld_Month == Month).Select(s => s.fld_PurataGaji).FirstOrDefault() : AverageSalary;
             var Krytn = tbl_Pkjmast.fld_Kdrkyt;
-            var tbl_GajiBulanan = await db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_ID == Guid).FirstOrDefaultAsync();
+            //Edited by shah
+            var tbl_GajiBulananList = await db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Year == Year && x.fld_Month <= 12).ToListAsync();
+            var tbl_GajiBulanan = tbl_GajiBulananList.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_ID == Guid).FirstOrDefault();
+            //Edited by shah
             AverageSalary = tbl_GajiBulanan.fld_PurataGaji;
             AverageSalary12Month = tbl_GajiBulanan.fld_PurataGaji12Bln;
             var GetLastMonthAverageSalary = await db2.tbl_GajiBulanan.Where(x => x.fld_Nopkj == NoPkj && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Month == LastSelectMonthDate.Month && x.fld_Year == LastSelectMonthDate.Year).Select(s => s.fld_PurataGaji).FirstOrDefaultAsync();
@@ -1109,16 +1112,16 @@ namespace SalaryGeneratorServices.FuncClass
                                 GetLastMonthAverageSalary = GetMinPay;
                             }
                             break;
-                        }                      
+                        }
 
-                            //commented by faeza 03.08.2023
-                            //decimal? SalaryIncrement = tbl_PkjIncrmntSalary.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_AppStatus == true).Select(s => s.fld_IncrmntSalary).FirstOrDefault();
-                            //if (SalaryIncrement != null)
-                            //{
-                            //    GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
-                            //}
+                        //commented by faeza 03.08.2023
+                        //decimal? SalaryIncrement = tbl_PkjIncrmntSalary.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_AppStatus == true).Select(s => s.fld_IncrmntSalary).FirstOrDefault();
+                        //if (SalaryIncrement != null)
+                        //{
+                        //    GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
+                        //}
                     }
-                
+
                 }
                 else
                 {
@@ -1168,15 +1171,15 @@ namespace SalaryGeneratorServices.FuncClass
                             }
                             break;
                         }
-                           //var GetTKTPayment = GetMinPayforLeave.Where(x => x.fldOptConfFlag2 == "2").Select(s => s.fldOptConfValue).FirstOrDefault();
-                                //var GetMinPay = decimal.Parse(GetTKTPayment);
+                        //var GetTKTPayment = GetMinPayforLeave.Where(x => x.fldOptConfFlag2 == "2").Select(s => s.fldOptConfValue).FirstOrDefault();
+                        //var GetMinPay = decimal.Parse(GetTKTPayment);
 
-                                //decimal? SalaryIncrement = tbl_PkjIncrmntSalary.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_AppStatus == true).Select(s => s.fld_IncrmntSalary).FirstOrDefault();
+                        //decimal? SalaryIncrement = tbl_PkjIncrmntSalary.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_AppStatus == true).Select(s => s.fld_IncrmntSalary).FirstOrDefault();
 
-                                //if (SalaryIncrement != null)
-                                //{
-                                //    GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
-                                //}                            
+                        //if (SalaryIncrement != null)
+                        //{
+                        //    GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
+                        //}                            
                     }
                 }
                 else
@@ -1458,29 +1461,24 @@ namespace SalaryGeneratorServices.FuncClass
             }
 
             // cuti tahunan sahaja
-            else if (GetStatusXActv.Contains(PkjStatus.fld_Sbtakf) == false && PkjStatus.fld_Kdaktf == "1" && Month == 12 && KodCutiTahunan != null)
+            //Edited by Shah
+            else if (GetStatusXActv.Contains(PkjStatus.fld_Sbtakf) == false && PkjStatus.fld_Kdaktf == "1" && Month == 12)
             {
                 //var PaidLeaveCode = CutiKategoriList.Where(x => x.fld_WaktuBayaranCuti == 0).Select(s => s.fld_KodCuti).ToList();
                 var TakeLeaves = tbl_Kerjahdr.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == KodCutiTahunan.fld_KodCuti).ToList();
                 var PeruntukkanCtTahunan = tbl_CutiPeruntukan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_NoPkj == NoPkj && x.fld_Tahun == Year && x.fld_KodCuti == KodCutiTahunan.fld_KodCuti).Select(s => s.fld_JumlahCuti).FirstOrDefault();
 
-                foreach (var TakeLeave in TakeLeaves)
-                {
-                    LeavePayment = GetLastMonthAverageSalary;
-                    KerjahdrCutiList.Add(new tbl_KerjahdrCuti() { fld_Kadar = GetLastMonthAverageSalary, fld_Jumlah = LeavePayment, fld_Nopkj = TakeLeave.fld_Nopkj, fld_KerjahdrID = TakeLeave.fld_UniqueID, fld_Kum = TakeLeave.fld_Kum, fld_Tarikh = TakeLeave.fld_Tarikh, fld_NegaraID = NegaraID, fld_SyarikatID = SyarikatID, fld_WilayahID = WilayahID, fld_LadangID = LadangID, fld_CreatedBy = UserID, fld_CreatedDT = DTProcess });
-                    TotalPaidLeave2 = TotalPaidLeave2 + LeavePayment;
-                    LeavePayment = 0;
-                }
+                var bakiCuti = PeruntukkanCtTahunan - TakeLeaves.Count;
 
-                if (PeruntukkanCtTahunan > TakeLeaves.Count)
+                if (bakiCuti > 0)
                 {
-                    CheckPeruntukkan = PeruntukkanCtTahunan - TakeLeaves.Count;
-                    LeavePayment = GetLastMonthAverageSalary;
-                    TotalPaidLeave3 = LeavePayment * CheckPeruntukkan;
+                    var gajiSatuTahun = tbl_GajiBulananList.Where(x => x.fld_Year == Year && x.fld_Month <= 12).ToList();
+                    LeavePayment = gajiSatuTahun.Sum(s => s.fld_PurataGaji) / gajiSatuTahun.Count;
+                    TotalPaidLeave3 = decimal.Round(LeavePayment.Value, 2) * bakiCuti;
                     KerjahdrCutiTahunan.fld_Kadar = LeavePayment;
-                    KerjahdrCutiTahunan.fld_KodCuti = KodCutiTahunan.fld_KodCuti;
+                    KerjahdrCutiTahunan.fld_KodCuti = "C99";
                     KerjahdrCutiTahunan.fld_Kum = WorkerPaidLeaveLists.Select(s => s.fld_Kum).FirstOrDefault();
-                    KerjahdrCutiTahunan.fld_JumlahCuti = CheckPeruntukkan;
+                    KerjahdrCutiTahunan.fld_JumlahCuti = bakiCuti;
                     KerjahdrCutiTahunan.fld_JumlahAmt = TotalPaidLeave3;
                     KerjahdrCutiTahunan.fld_NegaraID = NegaraID;
                     KerjahdrCutiTahunan.fld_SyarikatID = SyarikatID;
@@ -1495,8 +1493,10 @@ namespace SalaryGeneratorServices.FuncClass
 
                     db2.tbl_KerjahdrCutiTahunan.Add(KerjahdrCutiTahunan);
                     await db2.SaveChangesAsync();
+                    await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 26, TotalPaidLeave3, DTProcess, UserID, GajiBulanan);
                 }
             }
+            //Edited by Shah
 
             await Step2Func.AddTo_tbl_KerjahdrCuti(NegaraID, SyarikatID, WilayahID, LadangID, KerjahdrCutiList);
 
@@ -1507,7 +1507,7 @@ namespace SalaryGeneratorServices.FuncClass
                 TotalPaidLeave3 = 0;
             }
 
-            OverAllPaidLeave = TotalPaidLeave + TotalPaidLeave2 + TotalPaidLeave3;
+            OverAllPaidLeave = TotalPaidLeave + TotalPaidLeave2;
 
             GajiBulanan = db2.tbl_GajiBulanan.Find(Guid);
             await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 8, OverAllPaidLeave, DTProcess, UserID, GajiBulanan);
@@ -1540,7 +1540,7 @@ namespace SalaryGeneratorServices.FuncClass
                 var GetInsetifEffectCode = tbl_JenisInsentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_JenisInsentif == "P" && x.fld_AdaCaruman == true && x.fld_Deleted == false).Select(s => s.fld_KodInsentif).ToArray();
                 TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
                 TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
-                TotalSalaryForKWSP = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_BonusHarian + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr;
+                TotalSalaryForKWSP = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_BonusHarian + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + GajiBulanan.fld_BakiCutiTahunan;
 
                 var GetCarumanKWSP = db.tbl_Kwsp.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == KodCaruman && TotalSalaryForKWSP >= x.fld_KdrLower && TotalSalaryForKWSP <= x.fld_KdrUpper).FirstOrDefault();
                 if (GetCarumanKWSP != null)
@@ -1591,7 +1591,7 @@ namespace SalaryGeneratorServices.FuncClass
                 var GetInsetifEffectCode = tbl_JenisInsentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_JenisInsentif == "P" && x.fld_AdaCaruman == true && x.fld_Deleted == false).Select(s => s.fld_KodInsentif).ToArray();
                 TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
                 TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
-                TotalSalaryForSocso = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr;
+                TotalSalaryForSocso = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + GajiBulanan.fld_BakiCutiTahunan;
 
                 var GetCarumanSocso = db.tbl_Socso.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == KodCaruman && TotalSalaryForSocso >= x.fld_KdrLower && TotalSalaryForSocso <= x.fld_KdrUpper).FirstOrDefault();
                 if (GetCarumanSocso != null)
@@ -1643,7 +1643,7 @@ namespace SalaryGeneratorServices.FuncClass
             var GetInsetifEffectCode = tbl_JenisInsentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_JenisInsentif == "P" && x.fld_AdaCaruman == true && x.fld_Deleted == false).Select(s => s.fld_KodInsentif).ToArray();
             TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
             TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
-            TotalSalaryForOtherContribution = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS;
+            TotalSalaryForOtherContribution = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_BakiCutiTahunan;
             decimal? ContriMjk = 0;
             decimal? ContriPkj = 0;
             foreach (var GetOtherContribution in GetOtherContributions)
@@ -1717,7 +1717,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? OtherContr = 0;
             decimal? TotalDebtDeduction = 0;
             GajiBulanan = await db2.tbl_GajiBulanan.FindAsync(Guid);
-            decimal? OverallSalary = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_BonusHarian + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_LainInsentif + GajiBulanan.fld_AIPS + GajiBulanan.fld_OT; // + GajiBulanan.fld_ByrKwsnSkr; + GajiBulanan.fld_KWSPMjk + GajiBulanan.fld_SocsoMjk;
+            decimal? OverallSalary = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_BonusHarian + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_LainInsentif + GajiBulanan.fld_AIPS + GajiBulanan.fld_OT + GajiBulanan.fld_BakiCutiTahunan; // + GajiBulanan.fld_ByrKwsnSkr; + GajiBulanan.fld_KWSPMjk + GajiBulanan.fld_SocsoMjk;
             OtherContr = db2.tbl_ByrCarumanTambahan.Where(x => x.fld_GajiID == Guid).Sum(s => s.fld_CarumanPekerja);
             if (OtherContr == null)
             {
@@ -1914,6 +1914,11 @@ namespace SalaryGeneratorServices.FuncClass
 
                 case 25: // untuk add total bayar kerja ORP
                     GajiBulanan.fld_TotalByrKerjaORP = PaymentAmount;
+                    db.Entry(GajiBulanan).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    break;
+                case 26: // untuk baki cuti tahunan
+                    GajiBulanan.fld_BakiCutiTahunan = PaymentAmount;
                     db.Entry(GajiBulanan).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     break;
