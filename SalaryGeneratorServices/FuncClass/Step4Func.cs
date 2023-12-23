@@ -342,9 +342,16 @@ namespace SalaryGeneratorServices.FuncClass
                     var NoPkjListTKT = NoPkjListTKTDetails.Where(x => x.fld_Kdrkyt == "MA" && x.fld_KodSAPPekerja == GetCostCenter).Select(s => s.fld_Nopkj).ToArray();
                     foreach (var Leave in GetLeave)
                     {
-                        Amount = Leave.fld_WaktuBayaranCuti == 1 ? vw_Kerja_Hdr_Cuti.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Tarikh.Value.Month == Month && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == Leave.fld_KodCuti && NoPkjListTKT.Contains(x.fld_Nopkj)).Sum(s => s.fld_Jumlah)
+                        if (Leave.fld_KodCuti != "C99")
+                        {
+                            Amount = Leave.fld_WaktuBayaranCuti == 1 ? vw_Kerja_Hdr_Cuti.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Tarikh.Value.Month == Month && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == Leave.fld_KodCuti && NoPkjListTKT.Contains(x.fld_Nopkj)).Sum(s => s.fld_Jumlah)
                         :
                         vw_Kerja_Hdr_Cuti.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == Leave.fld_KodCuti && NoPkjListTKT.Contains(x.fld_Nopkj)).Sum(s => s.fld_Jumlah);
+                        }
+                        else
+                        {
+                            Amount = db2.tbl_KerjahdrCutiTahunan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Year == Year && x.fld_KodCuti == Leave.fld_KodCuti && NoPkjListTKT.Contains(x.fld_Nopkj)).Sum(s => s.fld_JumlahAmt);
+                        }
 
                         Amount = Amount == null ? 0 : Amount;
 
@@ -389,9 +396,16 @@ namespace SalaryGeneratorServices.FuncClass
                     var NoPkjListTKA = NoPkjListTKADetails.Where(x => x.fld_Kdrkyt != "MA" && x.fld_KodSAPPekerja == GetCostCenter).Select(s => s.fld_Nopkj).ToArray();
                     foreach (var Leave in GetLeave)
                     {
-                        Amount = Leave.fld_WaktuBayaranCuti == 1 ? vw_Kerja_Hdr_Cuti.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Tarikh.Value.Month == Month && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == Leave.fld_KodCuti && NoPkjListTKA.Contains(x.fld_Nopkj)).Sum(s => s.fld_Jumlah)
+                        if (Leave.fld_KodCuti != "C99")
+                        {
+                            Amount = Leave.fld_WaktuBayaranCuti == 1 ? vw_Kerja_Hdr_Cuti.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Tarikh.Value.Month == Month && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == Leave.fld_KodCuti && NoPkjListTKA.Contains(x.fld_Nopkj)).Sum(s => s.fld_Jumlah)
                         :
                         vw_Kerja_Hdr_Cuti.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == Leave.fld_KodCuti && NoPkjListTKA.Contains(x.fld_Nopkj)).Sum(s => s.fld_Jumlah);
+                        }
+                        else
+                        {
+                            Amount = db2.tbl_KerjahdrCutiTahunan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Year == Year && x.fld_KodCuti == Leave.fld_KodCuti && NoPkjListTKA.Contains(x.fld_Nopkj)).Sum(s => s.fld_JumlahAmt);
+                        }
 
                         Amount = Amount == null ? 0 : Amount;
 

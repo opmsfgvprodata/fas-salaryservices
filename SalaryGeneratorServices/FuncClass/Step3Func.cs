@@ -1465,11 +1465,11 @@ namespace SalaryGeneratorServices.FuncClass
             else if (GetStatusXActv.Contains(PkjStatus.fld_Sbtakf) == false && PkjStatus.fld_Kdaktf == "1" && Month == 12)
             {
                 //var PaidLeaveCode = CutiKategoriList.Where(x => x.fld_WaktuBayaranCuti == 0).Select(s => s.fld_KodCuti).ToList();
-                var TakeLeaves = tbl_Kerjahdr.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == KodCutiTahunan.fld_KodCuti).ToList();
-                var PeruntukkanCtTahunan = tbl_CutiPeruntukan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_NoPkj == NoPkj && x.fld_Tahun == Year && x.fld_KodCuti == KodCutiTahunan.fld_KodCuti).Select(s => s.fld_JumlahCuti).FirstOrDefault();
+                var TakeLeaves = tbl_Kerjahdr.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == "C02").ToList();
+                var PeruntukkanCtTahunan = tbl_CutiPeruntukan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_NoPkj == NoPkj && x.fld_Tahun == Year && x.fld_KodCuti == "C02").Select(s => s.fld_JumlahCuti).FirstOrDefault();
 
                 var bakiCuti = PeruntukkanCtTahunan - TakeLeaves.Count;
-
+                GajiBulanan = db2.tbl_GajiBulanan.Find(Guid);
                 if (bakiCuti > 0)
                 {
                     var gajiSatuTahun = tbl_GajiBulananList.Where(x => x.fld_Year == Year && x.fld_Month <= 12).ToList();
@@ -1492,8 +1492,19 @@ namespace SalaryGeneratorServices.FuncClass
                     KerjahdrCutiTahunan.fld_StatusAmbil = false;
 
                     db2.tbl_KerjahdrCutiTahunan.Add(KerjahdrCutiTahunan);
-                    await db2.SaveChangesAsync();
+                    try
+                    {
+                        await db2.SaveChangesAsync();
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
                     await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 26, TotalPaidLeave3, DTProcess, UserID, GajiBulanan);
+                }
+                else
+                {
+                    await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 26, 0, DTProcess, UserID, GajiBulanan);
                 }
             }
             //Edited by Shah

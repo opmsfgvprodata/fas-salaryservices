@@ -9,6 +9,7 @@ namespace SalaryGeneratorServices.ModelsEstate
     public partial class tbl_KerjahdrCutiTahunan
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid fld_ID { get; set; }
 
         [StringLength(50)]
