@@ -1506,7 +1506,7 @@ namespace SalaryGeneratorServices.FuncClass
                 {
                     await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 26, 0, DTProcess, UserID, GajiBulanan);
                 }
-                await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 18, Math.Round(decimal.Parse(LeavePayment.ToString()), 2), DTProcess, UserID, GajiBulanan);
+                await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 18, LeavePayment, DTProcess, UserID, GajiBulanan);
             }
             //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
 
