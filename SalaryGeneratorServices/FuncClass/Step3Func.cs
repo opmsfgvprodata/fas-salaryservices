@@ -1492,21 +1492,14 @@ namespace SalaryGeneratorServices.FuncClass
                     KerjahdrCutiTahunan.fld_StatusAmbil = false;
 
                     db2.tbl_KerjahdrCutiTahunan.Add(KerjahdrCutiTahunan);
-                    try
-                    {
-                        await db2.SaveChangesAsync();
-                    }
-                    catch(Exception ex)
-                    {
-
-                    }
+                    await db2.SaveChangesAsync();
                     await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 26, TotalPaidLeave3, DTProcess, UserID, GajiBulanan);
                 }
                 else
                 {
                     await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 26, 0, DTProcess, UserID, GajiBulanan);
                 }
-                await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 18, LeavePayment, DTProcess, UserID, GajiBulanan);
+                await  AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 18, LeavePayment, DTProcess, UserID, GajiBulanan);
             }
             //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
 
@@ -1942,7 +1935,7 @@ namespace SalaryGeneratorServices.FuncClass
                     db.Entry(GajiBulanan).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     break;
-                 //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
+                    //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
             }
 
             return MonthSalaryID;
