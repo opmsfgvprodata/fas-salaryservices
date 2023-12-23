@@ -1082,10 +1082,10 @@ namespace SalaryGeneratorServices.FuncClass
             //AverageSalary = db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Year == LastSelectMonthDate.Year && x.fld_Month == LastSelectMonthDate.Month).Select(s => s.fld_PurataGaji).FirstOrDefault();
             //AverageSalary = AverageSalary == null ? db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Year == Year && x.fld_Month == Month).Select(s => s.fld_PurataGaji).FirstOrDefault() : AverageSalary;
             var Krytn = tbl_Pkjmast.fld_Kdrkyt;
-            //Edited by shah
+            //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
             var tbl_GajiBulananList = await db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Year == Year && x.fld_Month <= 12).ToListAsync();
             var tbl_GajiBulanan = tbl_GajiBulananList.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_ID == Guid).FirstOrDefault();
-            //Edited by shah
+            //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
             AverageSalary = tbl_GajiBulanan.fld_PurataGaji;
             AverageSalary12Month = tbl_GajiBulanan.fld_PurataGaji12Bln;
             var GetLastMonthAverageSalary = await db2.tbl_GajiBulanan.Where(x => x.fld_Nopkj == NoPkj && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Month == LastSelectMonthDate.Month && x.fld_Year == LastSelectMonthDate.Year).Select(s => s.fld_PurataGaji).FirstOrDefaultAsync();
@@ -1461,7 +1461,7 @@ namespace SalaryGeneratorServices.FuncClass
             }
 
             // cuti tahunan sahaja
-            //Edited by Shah
+            //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
             else if (GetStatusXActv.Contains(PkjStatus.fld_Sbtakf) == false && PkjStatus.fld_Kdaktf == "1" && Month == 12)
             {
                 //var PaidLeaveCode = CutiKategoriList.Where(x => x.fld_WaktuBayaranCuti == 0).Select(s => s.fld_KodCuti).ToList();
@@ -1507,7 +1507,7 @@ namespace SalaryGeneratorServices.FuncClass
                     await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 26, 0, DTProcess, UserID, GajiBulanan);
                 }
             }
-            //Edited by Shah
+            //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
 
             await Step2Func.AddTo_tbl_KerjahdrCuti(NegaraID, SyarikatID, WilayahID, LadangID, KerjahdrCutiList);
 
@@ -1551,7 +1551,9 @@ namespace SalaryGeneratorServices.FuncClass
                 var GetInsetifEffectCode = tbl_JenisInsentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_JenisInsentif == "P" && x.fld_AdaCaruman == true && x.fld_Deleted == false).Select(s => s.fld_KodInsentif).ToArray();
                 TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
                 TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
+                //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
                 TotalSalaryForKWSP = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_BonusHarian + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + GajiBulanan.fld_BakiCutiTahunan;
+                //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
 
                 var GetCarumanKWSP = db.tbl_Kwsp.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == KodCaruman && TotalSalaryForKWSP >= x.fld_KdrLower && TotalSalaryForKWSP <= x.fld_KdrUpper).FirstOrDefault();
                 if (GetCarumanKWSP != null)
@@ -1602,7 +1604,9 @@ namespace SalaryGeneratorServices.FuncClass
                 var GetInsetifEffectCode = tbl_JenisInsentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_JenisInsentif == "P" && x.fld_AdaCaruman == true && x.fld_Deleted == false).Select(s => s.fld_KodInsentif).ToArray();
                 TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
                 TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
+                //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
                 TotalSalaryForSocso = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + GajiBulanan.fld_BakiCutiTahunan;
+                //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
 
                 var GetCarumanSocso = db.tbl_Socso.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == KodCaruman && TotalSalaryForSocso >= x.fld_KdrLower && TotalSalaryForSocso <= x.fld_KdrUpper).FirstOrDefault();
                 if (GetCarumanSocso != null)
@@ -1654,7 +1658,10 @@ namespace SalaryGeneratorServices.FuncClass
             var GetInsetifEffectCode = tbl_JenisInsentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_JenisInsentif == "P" && x.fld_AdaCaruman == true && x.fld_Deleted == false).Select(s => s.fld_KodInsentif).ToArray();
             TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
             TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
+            //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
             TotalSalaryForOtherContribution = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_BakiCutiTahunan;
+            //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
+
             decimal? ContriMjk = 0;
             decimal? ContriPkj = 0;
             foreach (var GetOtherContribution in GetOtherContributions)
@@ -1928,11 +1935,13 @@ namespace SalaryGeneratorServices.FuncClass
                     db.Entry(GajiBulanan).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     break;
+                //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
                 case 26: // untuk baki cuti tahunan
                     GajiBulanan.fld_BakiCutiTahunan = PaymentAmount;
                     db.Entry(GajiBulanan).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     break;
+                 //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
             }
 
             return MonthSalaryID;
