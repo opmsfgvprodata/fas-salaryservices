@@ -1443,8 +1443,7 @@ namespace SalaryGeneratorServices.FuncClass
                 var bakiCuti = CheckPeruntukkan - TakeLeaves.Count;
                 if (bakiCuti > 0)
                 {
-                    LeavePayment = GetLastMonthAverageSalary;
-                    TotalPaidLeave3 = LeavePayment * CheckPeruntukkan;
+                    TotalPaidLeave3 = decimal.Round(LeavePayment.Value, 2) * bakiCuti;
                     KerjahdrCutiTahunan.fld_Kadar = LeavePayment;
                     KerjahdrCutiTahunan.fld_KodCuti = KodCutiTahunan.fld_KodCuti;
                     KerjahdrCutiTahunan.fld_Kum = WorkerPaidLeaveLists.Select(s => s.fld_Kum).FirstOrDefault();
