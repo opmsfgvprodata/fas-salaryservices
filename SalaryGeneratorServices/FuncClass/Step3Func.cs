@@ -1439,7 +1439,9 @@ namespace SalaryGeneratorServices.FuncClass
                     //}
                 }
 
-                if (CheckPeruntukkan > 0)
+                var TakeLeaves = tbl_Kerjahdr.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Tarikh.Value.Year == Year && x.fld_Kdhdct == KodCutiTahunan.fld_KodCuti).ToList();
+                var bakiCuti = CheckPeruntukkan - TakeLeaves.Count;
+                if (bakiCuti > 0)
                 {
                     LeavePayment = GetLastMonthAverageSalary;
                     TotalPaidLeave3 = LeavePayment * CheckPeruntukkan;
