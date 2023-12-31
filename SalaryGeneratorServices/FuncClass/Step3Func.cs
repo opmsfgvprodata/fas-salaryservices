@@ -1382,6 +1382,7 @@ namespace SalaryGeneratorServices.FuncClass
 
             var gajiSatuTahun = tbl_GajiBulananList.Where(x => x.fld_Year == Year && x.fld_Month <= 12).ToList();
             LeavePayment = gajiSatuTahun.Sum(s => s.fld_PurataGaji) / gajiSatuTahun.Count;
+            LeavePayment = decimal.Round(LeavePayment.Value, 2);
             GajiBulanan = db2.tbl_GajiBulanan.Find(Guid);
 
             // cuti tahunan sahaja
@@ -1477,7 +1478,7 @@ namespace SalaryGeneratorServices.FuncClass
                 var bakiCuti = PeruntukkanCtTahunan - TakeLeaves.Count;
                 if (bakiCuti > 0)
                 {
-                    TotalPaidLeave3 = decimal.Round(LeavePayment.Value, 2) * bakiCuti;
+                    TotalPaidLeave3 = LeavePayment * bakiCuti;
                     KerjahdrCutiTahunan.fld_Kadar = LeavePayment;
                     KerjahdrCutiTahunan.fld_KodCuti = "C99";
                     KerjahdrCutiTahunan.fld_Kum = WorkerPaidLeaveLists.Select(s => s.fld_Kum).FirstOrDefault();
