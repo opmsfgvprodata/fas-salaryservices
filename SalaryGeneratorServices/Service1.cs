@@ -342,7 +342,7 @@ namespace SalaryGeneratorServices
                                         //WriteLog("Get Leave Payment. (Data - No Pkj : " + Pkjmstlist.fld_Nopkj.Trim() + ", Total Payment : RM " + LeavePayment + ")", false, ServiceName, ServiceProcessID);
 
                                         //added by faeza 26.09.2022
-                                        LeavePayment = await Step3Func.GetPaidLeaveORPFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, WorkerPaidLeaveLists, StartWorkDate, false, CutiKategoriList, Pkjmstlist, tblOptionConfigsWebs, tbl_Kerjahdr, tbl_CutiPeruntukan, tbl_PkjIncrmntSalary);
+                                        LeavePayment = await Step3Func.GetPaidLeaveORPFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, WorkerPaidLeaveLists, StartWorkDate, false, CutiKategoriList, Pkjmstlist, tblOptionConfigsWebs, tbl_Kerjahdr, tbl_CutiPeruntukan, tbl_PkjIncrmntSalary, tbl_KerjahdrYearly);
                                         WriteLog("Get Leave Payment. (Data - No Pkj : " + Pkjmstlist.fld_Nopkj.Trim() + ", Total Payment : RM " + LeavePayment + ")", false, ServiceName, ServiceProcessID);
                                     }
                                     else
@@ -353,7 +353,7 @@ namespace SalaryGeneratorServices
                                         //WriteLog("No Leave Taken. (Data - No Pkj : " + Pkjmstlist.fld_Nopkj.Trim() + ")", false, ServiceName, ServiceProcessID);
 
                                         //added by faeza 26.09.2022
-                                        await Step3Func.GetPaidLeaveORPFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, WorkerPaidLeaveLists, StartWorkDate, true, CutiKategoriList, Pkjmstlist, tblOptionConfigsWebs, tbl_Kerjahdr, tbl_CutiPeruntukan, tbl_PkjIncrmntSalary);
+                                        await Step3Func.GetPaidLeaveORPFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, WorkerPaidLeaveLists, StartWorkDate, true, CutiKategoriList, Pkjmstlist, tblOptionConfigsWebs, tbl_Kerjahdr, tbl_CutiPeruntukan, tbl_PkjIncrmntSalary, tbl_KerjahdrYearly);
                                         WriteLog("No Leave Taken. (Data - No Pkj : " + Pkjmstlist.fld_Nopkj.Trim() + ")", false, ServiceName, ServiceProcessID);
                                     }
 
