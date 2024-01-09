@@ -1534,6 +1534,7 @@ namespace SalaryGeneratorServices.FuncClass
             GenSalaryModelEstate db2 = GenSalaryModelEstate.ConnectToSqlServer(host, catalog, user, pass);
             decimal? TotalSalaryForKWSP = 0;
             decimal? TotalInsentifEfected = 0;
+            decimal? BakiCutiTahunan = 0;
             GajiBulanan = await db2.tbl_GajiBulanan.FindAsync(Guid);
             decimal? KWSPMjk = 0;
             decimal? KWSPPkj = 0;
@@ -1548,7 +1549,9 @@ namespace SalaryGeneratorServices.FuncClass
                 TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
                 TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
                 //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
-                TotalSalaryForKWSP = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_BonusHarian + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + GajiBulanan.fld_BakiCutiTahunan;
+                //Modified by faeza 09.01.2024
+                BakiCutiTahunan = GajiBulanan.fld_BakiCutiTahunan == null ? 0 : GajiBulanan.fld_BakiCutiTahunan;
+                TotalSalaryForKWSP = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_BonusHarian + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + BakiCutiTahunan;
                 //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
 
                 var GetCarumanKWSP = db.tbl_Kwsp.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == KodCaruman && TotalSalaryForKWSP >= x.fld_KdrLower && TotalSalaryForKWSP <= x.fld_KdrUpper).FirstOrDefault();
@@ -1587,6 +1590,7 @@ namespace SalaryGeneratorServices.FuncClass
             GenSalaryModelEstate db2 = GenSalaryModelEstate.ConnectToSqlServer(host, catalog, user, pass);
             decimal? TotalSalaryForSocso = 0;
             decimal? TotalInsentifEfected = 0;
+            decimal? BakiCutiTahunan = 0;
             GajiBulanan = await db2.tbl_GajiBulanan.FindAsync(Guid);
             decimal? SocsoMjk = 0;
             decimal? SocsoPkj = 0;
@@ -1601,7 +1605,9 @@ namespace SalaryGeneratorServices.FuncClass
                 TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
                 TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
                 //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
-                TotalSalaryForSocso = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + GajiBulanan.fld_BakiCutiTahunan;
+                //modified by faeza 09.01.2024
+                BakiCutiTahunan = GajiBulanan.fld_BakiCutiTahunan == null ? 0 : GajiBulanan.fld_BakiCutiTahunan;
+                TotalSalaryForSocso = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + GajiBulanan.fld_BonusHarian + BakiCutiTahunan;
                 //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
 
                 var GetCarumanSocso = db.tbl_Socso.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == KodCaruman && TotalSalaryForSocso >= x.fld_KdrLower && TotalSalaryForSocso <= x.fld_KdrUpper).FirstOrDefault();
@@ -1647,6 +1653,7 @@ namespace SalaryGeneratorServices.FuncClass
             TotalPkjCont = 0;
             decimal? TotalSalaryForOtherContribution = 0;
             decimal? TotalInsentifEfected = 0;
+            decimal? BakiCutiTahunan = 0;
             GajiBulanan = await db2.tbl_GajiBulanan.FindAsync(Guid);
 
             var GetOtherContributions = tbl_PkjCarumanTambahan.Where(x => x.fld_Nopkj == NoPkj && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Deleted == false).ToList();
@@ -1655,7 +1662,9 @@ namespace SalaryGeneratorServices.FuncClass
             TotalInsentifEfected = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && GetInsetifEffectCode.Contains(x.fld_KodInsentif) && x.fld_Deleted == false && x.fld_Month == Month && x.fld_Year == Year).Sum(s => s.fld_NilaiInsentif);
             TotalInsentifEfected = TotalInsentifEfected == null ? 0 : TotalInsentifEfected;
             //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
-            TotalSalaryForOtherContribution = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_BakiCutiTahunan;
+            //modified by faeza 09.01.2024
+            BakiCutiTahunan = GajiBulanan.fld_BakiCutiTahunan == null ? 0 : GajiBulanan.fld_BakiCutiTahunan;
+            TotalSalaryForOtherContribution = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_OT + TotalInsentifEfected + GajiBulanan.fld_AIPS + GajiBulanan.fld_ByrKwsnSkr + GajiBulanan.fld_BonusHarian + BakiCutiTahunan;
             //Modified by Shah 23.12.2023 - Baki Cuti Tahunan
 
             decimal? ContriMjk = 0;
@@ -1730,8 +1739,11 @@ namespace SalaryGeneratorServices.FuncClass
 
             decimal? OtherContr = 0;
             decimal? TotalDebtDeduction = 0;
+            decimal? BakiCutiTahunan = 0;
             GajiBulanan = await db2.tbl_GajiBulanan.FindAsync(Guid);
-            decimal? OverallSalary = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_BonusHarian + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_LainInsentif + GajiBulanan.fld_AIPS + GajiBulanan.fld_OT + GajiBulanan.fld_BakiCutiTahunan; // + GajiBulanan.fld_ByrKwsnSkr; + GajiBulanan.fld_KWSPMjk + GajiBulanan.fld_SocsoMjk;
+            //Modified by faeza 09.01.2024
+            BakiCutiTahunan = GajiBulanan.fld_BakiCutiTahunan == null ? 0 : GajiBulanan.fld_BakiCutiTahunan;
+            decimal? OverallSalary = GajiBulanan.fld_ByrKerja + GajiBulanan.fld_BonusHarian + GajiBulanan.fld_ByrCuti + GajiBulanan.fld_LainInsentif + GajiBulanan.fld_AIPS + GajiBulanan.fld_OT + BakiCutiTahunan; // + GajiBulanan.fld_ByrKwsnSkr; + GajiBulanan.fld_KWSPMjk + GajiBulanan.fld_SocsoMjk;
             OtherContr = db2.tbl_ByrCarumanTambahan.Where(x => x.fld_GajiID == Guid).Sum(s => s.fld_CarumanPekerja);
             if (OtherContr == null)
             {
