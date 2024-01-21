@@ -86,7 +86,7 @@ namespace SalaryGeneratorServices.ModelsEstate
 
         //added by faeza 26.02.2023
         public virtual DbSet<tbl_SpecialInsentif> tbl_SpecialInsentif { get; set; }
-
+        public virtual DbSet<tbl_TaxWorkerInfo> tbl_TaxWorkerInfo { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

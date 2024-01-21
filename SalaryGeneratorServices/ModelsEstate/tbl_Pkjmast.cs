@@ -17,7 +17,7 @@ namespace SalaryGeneratorServices.ModelsEstate
         [StringLength(15)]
         public string fld_Nokp { get; set; }
 
-        [StringLength(40)]
+        [StringLength(100)]
         public string fld_Nama { get; set; }
 
         [StringLength(100)]
@@ -178,9 +178,48 @@ namespace SalaryGeneratorServices.ModelsEstate
         [StringLength(50)]
         public string fld_KodSAPPekerja { get; set; }
 
-        //add by faeza 09.06.2021
+        [StringLength(200)]
+        public string fld_Almt2 { get; set; }
+
+        [StringLength(5)]
+        public string fld_Negara2 { get; set; }
+
+        public Guid? fld_LbrRefID { get; set; }
+
+        [StringLength(5)]
+        public string fld_PurposeRequest { get; set; }
+
         [StringLength(15)]
         public string fld_PaymentMode { get; set; }
 
+        [StringLength(4)]
+        public string fld_Last4Pan { get; set; }
+
+        [StringLength(10)]
+        public string fld_PassportStatus { get; set; }
+
+        [StringLength(50)]
+        public string fld_PassportRenewalStatus { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? fld_PassportRenewalStartDate { get; set; }
+
+        [StringLength(10)]
+        public string fld_PermitStatus { get; set; }
+
+        [StringLength(50)]
+        public string fld_PermitRenewalStatus { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? fld_PermitRenewalStartDate { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? fld_ContractStartDate { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? fld_ContractExpiryDate { get; set; }
+
+        [StringLength(20)]
+        public string fld_NopkjPermanent { get; set; }
     }
 }

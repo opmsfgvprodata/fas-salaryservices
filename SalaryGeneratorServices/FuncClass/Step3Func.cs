@@ -13,6 +13,15 @@ namespace SalaryGeneratorServices.FuncClass
 {
     class Step3Func
     {
+        //add by Shah 01.01.2024
+        public List<tbl_Pkjmast> tbl_Pkjmasts;
+
+        public void GetPkjMastsData(List<tbl_Pkjmast> Pkjmasts)
+        {
+            tbl_Pkjmasts = Pkjmasts;
+        }
+        //add by Shah 01.01.2024
+
         public async Task<CustMod_PaidWorking> GetPaidWorkingFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, List<tbl_Kerja> tbl_Kerja)
         {
             GetConnectFunc conn = new GetConnectFunc();
@@ -1636,7 +1645,7 @@ namespace SalaryGeneratorServices.FuncClass
             return CustMod_Socso;
         }
 
-        public async Task<CustMod_OthrCon> GetOtherContributionsFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, List<tbl_PkjCarumanTambahan> tbl_PkjCarumanTambahan, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tbl_CarumanTambahan> tbl_CarumanTambahan, List<tbl_SubCarumanTambahan> tbl_SubCarumanTambahan, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahan)
+        public async Task<CustMod_OthrCon> GetOtherContributionsFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, List<tbl_PkjCarumanTambahan> tbl_PkjCarumanTambahan, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tbl_CarumanTambahan> tbl_CarumanTambahan, List<tbl_SubCarumanTambahan> tbl_SubCarumanTambahan, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahanList, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo)
         {
             GenSalaryModelHQ db = new GenSalaryModelHQ();
             GetConnectFunc conn = new GetConnectFunc();
@@ -1671,44 +1680,65 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? ContriPkj = 0;
             foreach (var GetOtherContribution in GetOtherContributions)
             {
-                ContriMjk = 0;
-                ContriPkj = 0;
-                var GetContributionDetail = tbl_CarumanTambahan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == GetOtherContribution.fld_KodCaruman).FirstOrDefault();
-                var GetSubContributionDetail = tbl_SubCarumanTambahan.Where(x => x.fld_KodSubCaruman == GetOtherContribution.fld_KodSubCaruman && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID).FirstOrDefault();
-                GetContributionAmnt = tbl_JadualCarumanTambahan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodSubCaruman == GetOtherContribution.fld_KodSubCaruman && TotalSalaryForOtherContribution >= x.fld_GajiLower && TotalSalaryForOtherContribution <= x.fld_GajiUpper).FirstOrDefault();
-                if (GetContributionDetail.fld_Berjadual == true)
+                //Added by Shah 01_01_2024
+                if (GetOtherContribution.fld_KodCaruman == "PCB")
                 {
-                    switch (GetContributionDetail.fld_CarumanOleh)
+                    if (tbl_TaxWorkerInfo.fld_TaxResidency == "1")
                     {
-                        case 1:
-                            ContriPkj = GetContributionAmnt.fld_CarumanPekerja;
-                            break;
-                        case 2:
-                            ContriMjk = GetContributionAmnt.fld_CarumanMajikan;
-                            break;
-                        case 3:
-                            ContriPkj = GetContributionAmnt.fld_CarumanPekerja;
-                            ContriMjk = GetContributionAmnt.fld_CarumanMajikan;
-                            break;
+                        var noPkjPermanent = tbl_Pkjmasts.Where(x => x.fld_Nopkj == NoPkj).Select(s => s.fld_NopkjPermanent).FirstOrDefault();
+                        var tbl_GajiBulanan = db2.tbl_GajiBulanan.Where(x => x.fld_NopkjPermanent == noPkjPermanent && x.fld_Year == Year).ToList();
+                        var byrCarumanTambahan = PCBResident(tbl_GajiBulanan, Month, Year, tbl_TaxRelief, tbl_TaxWorkerInfo, tbl_JadualCarumanTambahanList, ByrCarumanTambahanList, false, Guid, GetOtherContribution, NegaraID, SyarikatID, WilayahID, LadangID, db2);
+                        ByrCarumanTambahanList.Add(byrCarumanTambahan);
                     }
+                    else
+                    {
+                        ContriPkj = 0.3m * TotalSalaryForOtherContribution;
+                        ContriPkj = Round(ContriPkj.Value);
+                        ByrCarumanTambahanList.Add(new tbl_ByrCarumanTambahan() { fld_GajiID = Guid, fld_KodCaruman = GetOtherContribution.fld_KodCaruman, fld_KodSubCaruman = GetOtherContribution.fld_KodSubCaruman, fld_CarumanPekerja = ContriPkj, fld_CarumanMajikan = 0, fld_Month = Month, fld_Year = Year, fld_LadangID = LadangID, fld_WilayahID = WilayahID, fld_SyarikatID = SyarikatID, fld_NegaraID = NegaraID });
+                    }
+                    //Added by Shah 01_01_2024
                 }
                 else
                 {
-                    switch (GetContributionDetail.fld_CarumanOleh)
+                    ContriMjk = 0;
+                    ContriPkj = 0;
+                    var GetContributionDetail = tbl_CarumanTambahan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == GetOtherContribution.fld_KodCaruman).FirstOrDefault();
+                    var GetSubContributionDetail = tbl_SubCarumanTambahan.Where(x => x.fld_KodSubCaruman == GetOtherContribution.fld_KodSubCaruman && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID).FirstOrDefault();
+                    GetContributionAmnt = tbl_JadualCarumanTambahanList.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodSubCaruman == GetOtherContribution.fld_KodSubCaruman && TotalSalaryForOtherContribution >= x.fld_GajiLower && TotalSalaryForOtherContribution <= x.fld_GajiUpper).FirstOrDefault();
+                    if (GetContributionDetail.fld_Berjadual == true)
                     {
-                        case 1:
-                            ContriPkj = TotalSalaryForOtherContribution * GetSubContributionDetail.fld_KadarPekerja;
-                            break;
-                        case 2:
-                            ContriMjk = TotalSalaryForOtherContribution * GetSubContributionDetail.fld_KadarMajikan;
-                            break;
-                        case 3:
-                            ContriPkj = TotalSalaryForOtherContribution * GetSubContributionDetail.fld_KadarPekerja;
-                            ContriMjk = TotalSalaryForOtherContribution * GetSubContributionDetail.fld_KadarMajikan;
-                            break;
+                        switch (GetContributionDetail.fld_CarumanOleh)
+                        {
+                            case 1:
+                                ContriPkj = GetContributionAmnt.fld_CarumanPekerja;
+                                break;
+                            case 2:
+                                ContriMjk = GetContributionAmnt.fld_CarumanMajikan;
+                                break;
+                            case 3:
+                                ContriPkj = GetContributionAmnt.fld_CarumanPekerja;
+                                ContriMjk = GetContributionAmnt.fld_CarumanMajikan;
+                                break;
+                        }
                     }
+                    else
+                    {
+                        switch (GetContributionDetail.fld_CarumanOleh)
+                        {
+                            case 1:
+                                ContriPkj = TotalSalaryForOtherContribution * GetSubContributionDetail.fld_KadarPekerja;
+                                break;
+                            case 2:
+                                ContriMjk = TotalSalaryForOtherContribution * GetSubContributionDetail.fld_KadarMajikan;
+                                break;
+                            case 3:
+                                ContriPkj = TotalSalaryForOtherContribution * GetSubContributionDetail.fld_KadarPekerja;
+                                ContriMjk = TotalSalaryForOtherContribution * GetSubContributionDetail.fld_KadarMajikan;
+                                break;
+                        }
+                    }
+                    ByrCarumanTambahanList.Add(new tbl_ByrCarumanTambahan() { fld_GajiID = Guid, fld_KodCaruman = GetOtherContribution.fld_KodCaruman, fld_KodSubCaruman = GetOtherContribution.fld_KodSubCaruman, fld_CarumanPekerja = ContriPkj, fld_CarumanMajikan = ContriMjk, fld_Month = Month, fld_Year = Year, fld_LadangID = LadangID, fld_WilayahID = WilayahID, fld_SyarikatID = SyarikatID, fld_NegaraID = NegaraID });
                 }
-                ByrCarumanTambahanList.Add(new tbl_ByrCarumanTambahan() { fld_GajiID = Guid, fld_KodCaruman = GetOtherContribution.fld_KodCaruman, fld_KodSubCaruman = GetOtherContribution.fld_KodSubCaruman, fld_CarumanPekerja = ContriPkj, fld_CarumanMajikan = ContriMjk, fld_Month = Month, fld_Year = Year, fld_LadangID = LadangID, fld_WilayahID = WilayahID, fld_SyarikatID = SyarikatID, fld_NegaraID = NegaraID });
             }
 
             if (ByrCarumanTambahanList.Count > 0)
@@ -1729,7 +1759,149 @@ namespace SalaryGeneratorServices.FuncClass
             return CustMod_OthrCon;
         }
 
-        public async Task<CustMod_OverallSlry> GetOverallSalaryFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tblOptionConfigsWeb> tblOptionConfigsWebs, List<tbl_HutangPekerjaJumlah> tbl_HutangPekerjaJumlah)
+        //Added by Shah 01_01_2024
+        public tbl_ByrCarumanTambahan PCBResident(List<tbl_GajiBulanan> tbl_GajiBulanan, int? month, int? year, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahan, List<tbl_ByrCarumanTambahan> tbl_ByrCarumanTambahan, bool isAdditional, Guid Guid, tbl_PkjCarumanTambahan GetOtherContribution, int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, GenSalaryModelEstate db2)
+        {
+            string maritulStatus = tbl_TaxWorkerInfo.fld_TaxMaritalStatus;
+            decimal? KLimit = tbl_TaxRelief.Where(x => x.fld_VariableCode == "K").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
+            decimal? K = tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
+            decimal? K1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_KWSPPkj).FirstOrDefault();
+            decimal? Kt = 0;
+            decimal? n = 12m - decimal.Parse(month.ToString());
+            decimal? n1 = 12m - decimal.Parse(month.ToString()) + 1;
+            decimal? K2 = (KLimit - (K + K1 + Kt)) / n;
+            K2 = K2 > K1 ? K1 : K2;
+
+            decimal? Y = tbl_GajiBulanan.Sum(s => s.fld_GajiKasar);
+            decimal? Y1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_GajiKasar).FirstOrDefault();
+            decimal? Y2 = Y1;
+            decimal? Yt = 0;
+
+            decimal? D = tbl_TaxRelief.Where(x => x.fld_VariableCode == "D").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
+            decimal? Du = tbl_TaxWorkerInfo.fld_IsIndividuOKU == "1" ? tbl_TaxRelief.Where(x => x.fld_VariableCode == "DU").Select(s => s.fld_TaxReliefLimit).FirstOrDefault() : 0;
+            decimal? Su = tbl_TaxWorkerInfo.fld_IsSpouseOKU == "1" ? tbl_TaxRelief.Where(x => x.fld_VariableCode == "SU").Select(s => s.fld_TaxReliefLimit).FirstOrDefault() : 0;
+            decimal? S = 0;
+            decimal? C = 0;
+            decimal? Q = 0;
+            decimal? QC = 0;
+            decimal? LP = 0;
+            decimal? LP1 = 0;
+            decimal? P = 0;
+            decimal? M = 0;
+            decimal? R = 0;
+            decimal? B = 0;
+            decimal? Z = 0;
+            decimal? X = 0;
+            decimal? PCBY = 0;
+            decimal? PCBM = 0;
+            decimal? PCB = 0;
+
+            decimal? CB18F = tbl_TaxWorkerInfo.fld_ChildBelow18Full;
+            decimal? CB18H = tbl_TaxWorkerInfo.fld_ChildBelow18Half * (decimal)0.5;
+
+            decimal? CA18CF = tbl_TaxWorkerInfo.fld_ChildAbove18CertFull;
+            decimal? CA18CH = tbl_TaxWorkerInfo.fld_ChildAbove18CertHalf * (decimal)0.5;
+
+            decimal? CA18HF = tbl_TaxWorkerInfo.fld_ChildAbove18HigherFull * (decimal)4;
+            decimal? CA18HH = tbl_TaxWorkerInfo.fld_ChildAbove18HigherHalf * (decimal)2;
+
+            decimal? DCHF = tbl_TaxWorkerInfo.fld_DisabledChildFull * (decimal)3;
+            decimal? DCHH = tbl_TaxWorkerInfo.fld_DisabledChildHalf * (decimal)1.5;
+
+            decimal? DCHSF = tbl_TaxWorkerInfo.fld_DisabledChildStudyFull * (decimal)7;
+            decimal? DCHSH = tbl_TaxWorkerInfo.fld_DisabledChildStudyHalf * (decimal)3.5;
+
+            decimal? totalFull = CB18F + CA18CF + CA18HF + DCHF + DCHSF;
+            decimal? totalHalf = CB18H + CA18CH + CA18HH + DCHH + DCHSH;
+
+            if (maritulStatus == "2")
+            {
+                S = tbl_TaxRelief.Where(x => x.fld_VariableCode == "S").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
+                C = totalFull + totalHalf;
+                Q = tbl_TaxRelief.Where(x => x.fld_VariableCode == "Q").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
+                QC = Q * C;
+            }
+            else if (maritulStatus == "3" || maritulStatus == "4")
+            {
+                C = totalFull + totalHalf;
+                Q = tbl_TaxRelief.Where(x => x.fld_VariableCode == "Q").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
+                QC = Q * C;
+            }
+
+            P = ((Y - K) + (Y1 - K1) + ((Y2 - K2) * n) + (Yt - Kt)) - (D + S + Du + Su + QC + (LP + LP1));
+            var MRB = tbl_JadualCarumanTambahan.Where(x => x.fld_GajiUpper >= P && x.fld_GajiLower <= P && x.fld_KodSubCaruman == GetOtherContribution.fld_KodSubCaruman).FirstOrDefault();
+            M = MRB.fld_CarumanPekerja;
+            R = MRB.fld_TaxPercent_R;
+            if (maritulStatus == "1" || maritulStatus == "3" || maritulStatus == "4")
+            {
+                B = MRB.fld_Category1_B;
+            }
+            else if (maritulStatus == "2")
+            {
+                B = MRB.fld_Category2_B;
+            }
+            X = tbl_ByrCarumanTambahan.Sum(s => s.fld_CarumanPekerja);
+
+            PCBM = (((P - M) * R + B) - (Z + X)) / (n + 1);
+            PCB = PCBM - Z;
+            PCB = PCB < 0 ? 0 : PCB;
+            PCB = Round(PCB.Value);
+            //PCBY = X + PCBM * (n + 1);
+
+            var byrCarumanTambahan = new tbl_ByrCarumanTambahan
+            {
+                fld_GajiID = Guid,
+                fld_KodCaruman = GetOtherContribution.fld_KodCaruman,
+                fld_KodSubCaruman = GetOtherContribution.fld_KodSubCaruman,
+                fld_CarumanPekerja = PCB,
+                fld_CarumanMajikan = 0,
+                fld_Month = month,
+                fld_Year = year,
+                fld_LadangID = LadangID,
+                fld_WilayahID = WilayahID,
+                fld_SyarikatID = SyarikatID,
+                fld_NegaraID = NegaraID,
+                fld_B = B,
+                fld_C = int.Parse(C.ToString()),
+                fld_CarumanPekerjaNet = PCB,
+                fld_CarumanPekerjaYearly = PCBY,
+                fld_D = D,
+                fld_Du = Du,
+                fld_K = K,
+                fld_K1 = K1,
+                fld_K2 = K2,
+                fld_Kt = Kt,
+                fld_LP = LP,
+                fld_LP1 = LP1,
+                fld_M = M,
+                fld_n = int.Parse(n.ToString()),
+                fld_n1 = int.Parse(n1.ToString()),
+                fld_P = P,
+                fld_Q = Q,
+                fld_R = R,
+                fld_S = S,
+                fld_Su = Su,
+                fld_X = X,
+                fld_Y = Y,
+                fld_Y1 = Y1,
+                fld_Y2 = Y2,
+                fld_Yt = Yt,
+                fld_Z = Z
+            };
+            return byrCarumanTambahan;
+        }
+        public static decimal Round(decimal value)
+        {
+            var ceiling = Math.Ceiling(value * 20);
+            if (ceiling == 0)
+            {
+                return 0;
+            }
+            return ceiling / 20;
+        }
+        //Added by Shah 01_01_2024
+
+        public async Task<CustMod_OverallSlry> GetOverallSalaryFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tblOptionConfigsWeb> tblOptionConfigsWebs, List<tbl_HutangPekerjaJumlah> tbl_HutangPekerjaJumlah, bool isToGetRemuneration)
         {
             GetConnectFunc conn = new GetConnectFunc();
             tbl_GajiBulanan GajiBulanan = new tbl_GajiBulanan();
@@ -1761,8 +1933,14 @@ namespace SalaryGeneratorServices.FuncClass
             }
             await db2.Entry(GajiBulanan).ReloadAsync();
             GajiBulanan = await db2.tbl_GajiBulanan.FindAsync(Guid);
-            await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 13, OverallSalary, DTProcess, UserID, GajiBulanan);
-            await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 14, Salary, DTProcess, UserID, GajiBulanan);
+            if (isToGetRemuneration)
+            {
+                await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 13, OverallSalary, DTProcess, UserID, GajiBulanan);
+            }
+            else
+            {
+                await AddTo_tbl_GajiBulanan(db2, NegaraID, SyarikatID, WilayahID, LadangID, Month, Year, NoPkj, 14, Salary, DTProcess, UserID, GajiBulanan);
+            }
             var CustMod_OverallSlry = new CustMod_OverallSlry
             {
                 OverallSalary = OverallSalary,
@@ -1809,6 +1987,7 @@ namespace SalaryGeneratorServices.FuncClass
                     GajiBulanan.fld_ByrKerja = PaymentAmount;
                     GajiBulanan.fld_Month = Month;
                     GajiBulanan.fld_Year = Year;
+                    GajiBulanan.fld_NopkjPermanent = tbl_Pkjmasts.Where(x => x.fld_Nopkj == NoPkj).Select(s => s.fld_NopkjPermanent).FirstOrDefault();
                     db.tbl_GajiBulanan.Add(GajiBulanan);
                     await db.SaveChangesAsync();
                     MonthSalaryID = GajiBulanan.fld_ID;

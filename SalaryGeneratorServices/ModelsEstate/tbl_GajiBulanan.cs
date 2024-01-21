@@ -9,6 +9,7 @@ namespace SalaryGeneratorServices.ModelsEstate
     public partial class tbl_GajiBulanan
     {
         [Key]
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid fld_ID { get; set; }
 
@@ -101,9 +102,7 @@ namespace SalaryGeneratorServices.ModelsEstate
 
         [Column(TypeName = "numeric")]
         public decimal? fld_ByrKwsnSkr { get; set; }
-        
-        //modify by Faeza on 25/2/2020
-        //calc average salary rate - ORP
+
         [Column(TypeName = "numeric")]
         public decimal? fld_PurataGajiORP { get; set; }
 
@@ -122,11 +121,13 @@ namespace SalaryGeneratorServices.ModelsEstate
         [Column(TypeName = "numeric")]
         public decimal? fld_TotalByrKerjaORP { get; set; }
 
-        //added by faeza 09.06.2021
         [StringLength(15)]
         public string fld_PaymentMode { get; set; }
 
         [Column(TypeName = "numeric")]
         public decimal? fld_BakiCutiTahunan { get; set; }
+
+        [StringLength(20)]
+        public string fld_NopkjPermanent { get; set; }
     }
 }

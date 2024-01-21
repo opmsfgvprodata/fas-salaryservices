@@ -22,6 +22,12 @@ namespace SalaryGeneratorServices.ModelsHQ
 
         public decimal? fld_CarumanMajikan { get; set; }
 
+        public decimal? fld_TaxPercent_R { get; set; }
+
+        public decimal? fld_Category1_B { get; set; }
+
+        public decimal? fld_Category2_B { get; set; }
+
         public int fld_SyarikatID { get; set; }
 
         public int fld_NegaraID { get; set; }

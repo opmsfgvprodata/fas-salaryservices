@@ -80,6 +80,7 @@
     <Compile Include="ModelsCustom\CustMod_WorkSCTrans.cs" />
     <Compile Include="ModelsEstate\C__MigrationHistory.cs" />
     <Compile Include="ModelsEstate\GenSalaryModelEstate.cs" />
+    <Compile Include="ModelsEstate\Model1.cs" />
     <Compile Include="ModelsEstate\MVC_SYSTEM_SP_Models.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -134,6 +135,7 @@
     <Compile Include="ModelsEstate\tbl_SevicesProcessHistory.cs" />
     <Compile Include="ModelsEstate\tbl_Skb.cs" />
     <Compile Include="ModelsEstate\tbl_SubPkt.cs" />
+    <Compile Include="ModelsEstate\tbl_TaxWorkerInfo.cs" />
     <Compile Include="ModelsEstate\tbl_TutupUrusNiaga.cs" />
     <Compile Include="ModelsEstate\vw_GajiBulananPekerja.cs" />
     <Compile Include="ModelsEstate\vw_HasilSawitBlok.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="ModelsHQ\tbl_SubCarumanTambahan.cs" />
     <Compile Include="ModelsHQ\tbl_SuperAdminSelection.cs" />
     <Compile Include="ModelsHQ\tbl_Syarikat.cs" />
+    <Compile Include="ModelsHQ\tbl_TaxRelief.cs" />
     <Compile Include="ModelsHQ\tbl_Upah.cs" />
     <Compile Include="ModelsHQ\tbl_UpahAktiviti.cs" />
     <Compile Include="ModelsHQ\tbl_UpahMenuai.cs" />

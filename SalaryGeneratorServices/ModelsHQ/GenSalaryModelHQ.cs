@@ -99,7 +99,8 @@ namespace SalaryGeneratorServices.ModelsHQ
         public virtual DbSet<tbl_SAPLogPUP> tbl_SAPLogPUP { get; set; }
         public virtual DbSet<vw_NSWL_2> vw_NSWL_2 { get; set; }
         public virtual DbSet<tbl_MapGL> tbl_MapGL { get; set; }
-        
+        public virtual DbSet<tbl_TaxRelief> tbl_TaxRelief { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<tbl_JenisCaruman>()
@@ -275,6 +276,14 @@ namespace SalaryGeneratorServices.ModelsHQ
 
             modelBuilder.Entity<vw_CutiUmumNegeri>()
                 .Property(e => e.fld_TarikhCuti)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tbl_TaxRelief>()
+                .Property(e => e.fld_TaxReliefCode)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tbl_TaxRelief>()
+                .Property(e => e.fld_VariableCode)
                 .IsUnicode(false);
         }
     }
