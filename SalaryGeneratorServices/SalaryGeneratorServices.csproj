@@ -80,7 +80,6 @@
     <Compile Include="ModelsCustom\CustMod_WorkSCTrans.cs" />
     <Compile Include="ModelsEstate\C__MigrationHistory.cs" />
     <Compile Include="ModelsEstate\GenSalaryModelEstate.cs" />
-    <Compile Include="ModelsEstate\Model1.cs" />
     <Compile Include="ModelsEstate\MVC_SYSTEM_SP_Models.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
