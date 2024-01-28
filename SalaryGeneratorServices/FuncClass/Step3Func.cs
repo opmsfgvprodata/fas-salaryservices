@@ -1681,7 +1681,7 @@ namespace SalaryGeneratorServices.FuncClass
             foreach (var GetOtherContribution in GetOtherContributions)
             {
                 //Added by Shah 01_01_2024
-                if (GetOtherContribution.fld_KodCaruman == "PCB")
+                if (GetOtherContribution.fld_KodCaruman == "PCB" && GetOtherContribution.fld_KodSubCaruman == "PCB02")
                 {
                     if (tbl_TaxWorkerInfo.fld_TaxResidency == "1")
                     {
@@ -1692,7 +1692,8 @@ namespace SalaryGeneratorServices.FuncClass
                     }
                     else
                     {
-                        ContriPkj = 0.3m * TotalSalaryForOtherContribution;
+                        var kadar = tbl_SubCarumanTambahan.Where(x => x.fld_KodCaruman == GetOtherContribution.fld_KodCaruman && x.fld_KodSubCaruman == GetOtherContribution.fld_KodSubCaruman).Select(s => s.fld_KadarPekerja).FirstOrDefault();
+                        ContriPkj = kadar * TotalSalaryForOtherContribution;
                         ContriPkj = Round(ContriPkj.Value);
                         ByrCarumanTambahanList.Add(new tbl_ByrCarumanTambahan() { fld_GajiID = Guid, fld_KodCaruman = GetOtherContribution.fld_KodCaruman, fld_KodSubCaruman = GetOtherContribution.fld_KodSubCaruman, fld_CarumanPekerja = ContriPkj, fld_CarumanMajikan = 0, fld_Month = Month, fld_Year = Year, fld_LadangID = LadangID, fld_WilayahID = WilayahID, fld_SyarikatID = SyarikatID, fld_NegaraID = NegaraID });
                     }
@@ -1782,7 +1783,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? Su = tbl_TaxWorkerInfo.fld_IsSpouseOKU == "1" ? tbl_TaxRelief.Where(x => x.fld_VariableCode == "SU").Select(s => s.fld_TaxReliefLimit).FirstOrDefault() : 0;
             decimal? S = 0;
             decimal? C = 0;
-            decimal? Q = 0;
+            decimal? Q = tbl_TaxRelief.Where(x => x.fld_VariableCode == "Q").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
             decimal? QC = 0;
             decimal? LP = 0;
             decimal? LP1 = 0;
@@ -1818,13 +1819,11 @@ namespace SalaryGeneratorServices.FuncClass
             {
                 S = tbl_TaxRelief.Where(x => x.fld_VariableCode == "S").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
                 C = totalFull + totalHalf;
-                Q = tbl_TaxRelief.Where(x => x.fld_VariableCode == "Q").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
                 QC = Q * C;
             }
             else if (maritulStatus == "3" || maritulStatus == "4")
             {
                 C = totalFull + totalHalf;
-                Q = tbl_TaxRelief.Where(x => x.fld_VariableCode == "Q").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
                 QC = Q * C;
             }
 
@@ -1843,17 +1842,21 @@ namespace SalaryGeneratorServices.FuncClass
             X = tbl_ByrCarumanTambahan.Sum(s => s.fld_CarumanPekerja);
 
             PCBM = (((P - M) * R + B) - (Z + X)) / (n + 1);
+            PCBM = PCBM < 0 ? 0 : PCBM;
+            PCBM = Round(PCBM.Value);
             PCB = PCBM - Z;
             PCB = PCB < 0 ? 0 : PCB;
             PCB = Round(PCB.Value);
-            //PCBY = X + PCBM * (n + 1);
+            PCBY = ((P - M) * R + B);
+            PCBY = PCBY < 0 ? 0 : PCBY;
+            PCBY = Round(PCBY.Value);
 
             var byrCarumanTambahan = new tbl_ByrCarumanTambahan
             {
                 fld_GajiID = Guid,
                 fld_KodCaruman = GetOtherContribution.fld_KodCaruman,
                 fld_KodSubCaruman = GetOtherContribution.fld_KodSubCaruman,
-                fld_CarumanPekerja = PCB,
+                fld_CarumanPekerja = PCBM,
                 fld_CarumanMajikan = 0,
                 fld_Month = month,
                 fld_Year = year,
@@ -1886,7 +1889,20 @@ namespace SalaryGeneratorServices.FuncClass
                 fld_Y1 = Y1,
                 fld_Y2 = Y2,
                 fld_Yt = Yt,
-                fld_Z = Z
+                fld_Z = Z,
+                fld_ChildAbove18CertFull = tbl_TaxWorkerInfo.fld_ChildAbove18CertFull,
+                fld_ChildAbove18CertHalf = tbl_TaxWorkerInfo.fld_ChildAbove18CertHalf,
+                fld_ChildAbove18HigherFull = tbl_TaxWorkerInfo.fld_ChildAbove18HigherFull,
+                fld_ChildAbove18HigherHalf = tbl_TaxWorkerInfo.fld_ChildAbove18HigherHalf,
+                fld_ChildBelow18Full = tbl_TaxWorkerInfo.fld_ChildBelow18Full,
+                fld_ChildBelow18Half = tbl_TaxWorkerInfo.fld_ChildBelow18Half,
+                fld_DisabledChildFull = tbl_TaxWorkerInfo.fld_DisabledChildFull,
+                fld_DisabledChildHalf = tbl_TaxWorkerInfo.fld_DisabledChildHalf,
+                fld_DisabledChildStudyFull = tbl_TaxWorkerInfo.fld_DisabledChildStudyFull,
+                fld_DisabledChildStudyHalf = tbl_TaxWorkerInfo.fld_DisabledChildStudyHalf,
+                fld_IsIndividuOKU = tbl_TaxWorkerInfo.fld_IsIndividuOKU,
+                fld_IsSpouseOKU = tbl_TaxWorkerInfo.fld_IsSpouseOKU,
+                fld_TaxMaritalStatus = tbl_TaxWorkerInfo.fld_TaxMaritalStatus
             };
             return byrCarumanTambahan;
         }
