@@ -1765,7 +1765,7 @@ namespace SalaryGeneratorServices.FuncClass
         {
             string maritulStatus = tbl_TaxWorkerInfo.fld_TaxMaritalStatus;
             decimal? KLimit = tbl_TaxRelief.Where(x => x.fld_VariableCode == "K").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
-            decimal? K = tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
+            decimal? K = tbl_GajiBulanan.Where(x => x.fld_Month != month).Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
             decimal? K1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_KWSPPkj).FirstOrDefault();
             decimal? Kt = 0;
             decimal? n = 12m - decimal.Parse(month.ToString());
@@ -1773,7 +1773,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? K2 = (KLimit - (K + K1 + Kt)) / n;
             K2 = K2 > K1 ? K1 : K2;
 
-            decimal? Y = tbl_GajiBulanan.Sum(s => s.fld_GajiKasar);
+            decimal? Y = tbl_GajiBulanan.Where(x => x.fld_Month != month).Sum(s => s.fld_GajiKasar);
             decimal? Y1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_GajiKasar).FirstOrDefault();
             decimal? Y2 = Y1;
             decimal? Yt = 0;
