@@ -89,25 +89,25 @@ namespace SalaryGeneratorServices.ModelsEstate
 
         public decimal? fld_CarumanPekerjaNet { get; set; }
 
-        public int fld_ChildBelow18Full { get; set; }
+        public int? fld_ChildBelow18Full { get; set; }
 
-        public int fld_ChildBelow18Half { get; set; }
+        public int? fld_ChildBelow18Half { get; set; }
 
-        public int fld_ChildAbove18CertFull { get; set; }
+        public int? fld_ChildAbove18CertFull { get; set; }
 
-        public int fld_ChildAbove18CertHalf { get; set; }
+        public int? fld_ChildAbove18CertHalf { get; set; }
 
-        public int fld_ChildAbove18HigherFull { get; set; }
+        public int? fld_ChildAbove18HigherFull { get; set; }
 
-        public int fld_ChildAbove18HigherHalf { get; set; }
+        public int? fld_ChildAbove18HigherHalf { get; set; }
 
-        public int fld_DisabledChildFull { get; set; }
+        public int? fld_DisabledChildFull { get; set; }
 
-        public int fld_DisabledChildHalf { get; set; }
+        public int? fld_DisabledChildHalf { get; set; }
 
-        public int fld_DisabledChildStudyFull { get; set; }
+        public int? fld_DisabledChildStudyFull { get; set; }
 
-        public int fld_DisabledChildStudyHalf { get; set; }
+        public int? fld_DisabledChildStudyHalf { get; set; }
 
         [StringLength(5)]
         public string fld_TaxMaritalStatus { get; set; }
