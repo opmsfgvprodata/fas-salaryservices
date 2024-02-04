@@ -1842,7 +1842,7 @@ namespace SalaryGeneratorServices.FuncClass
             X = tbl_ByrCarumanTambahan.Sum(s => s.fld_CarumanPekerja);
 
             PCBM = (((P - M) * R + B) - (Z + X)) / (n + 1);
-            PCBM = PCBM < 0 ? 0 : PCBM;
+            PCBM = PCBM < 10 ? 0 : PCBM;
             PCBM = Round(PCBM.Value);
             PCB = PCBM - Z;
             PCB = PCB < 0 ? 0 : PCB;
