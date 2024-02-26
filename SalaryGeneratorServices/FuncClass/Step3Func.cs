@@ -1777,8 +1777,10 @@ namespace SalaryGeneratorServices.FuncClass
             K2 = K2 > K1 ? K1 : K2;
 
             decimal? reliefIncentif_Y = InsentifExcludePCBYearly.Where(x => x.fld_Year == year).Sum(s => s.fld_NilaiInsentif);
+            reliefIncentif_Y = reliefIncentif_Y == null ? 0m : reliefIncentif_Y;
             decimal? Y = tbl_GajiBulanan.Where(x => x.fld_Month != month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
             decimal? reliefIncentif_Y1 = InsentifExcludePCBYearly.Where(x => x.fld_Year == year && x.fld_Month == month).Sum(s => s.fld_NilaiInsentif);
+            reliefIncentif_Y1 = reliefIncentif_Y1 == null ? 0m : reliefIncentif_Y1;
             decimal? Y1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_GajiKasar).FirstOrDefault() - reliefIncentif_Y1;
 
             //update fld_TaxReliefInsentive
