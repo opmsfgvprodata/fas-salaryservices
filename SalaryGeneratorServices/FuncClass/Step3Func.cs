@@ -1731,7 +1731,7 @@ namespace SalaryGeneratorServices.FuncClass
                         var tbl_GajiBulanan = db2.tbl_GajiBulanan.Where(x => x.fld_NopkjPermanent == noPkjPermanent && x.fld_Year == Year).ToList();
                         var tbl_GajiBulananIDs = tbl_GajiBulanan.Select(s => s.fld_ID).ToArray();
                         var tbl_ByrCarumanTambahan = db2.tbl_ByrCarumanTambahan.Where(x => tbl_GajiBulananIDs.Contains(x.fld_GajiID.Value)).ToList();
-                        var byrCarumanTambahan = PCBResident(tbl_GajiBulanan, Month, Year, tbl_TaxRelief, tbl_TaxWorkerInfo, tbl_JadualCarumanTambahanList, ByrCarumanTambahanList, false, Guid, GetOtherContribution, NegaraID, SyarikatID, WilayahID, LadangID, tbl_JenisInsentif.Where(x => x.fld_ExcludePCB == true).ToList(), InsentifExcludePCBYearly.Where(x => x.fld_Nopkj == NoPkj).ToList(), tbl_ByrCarumanTambahan, ByrCarumanTambahanList, db2);
+                        var byrCarumanTambahan = PCBResident(tbl_GajiBulanan, Month, Year, tbl_TaxRelief, tbl_TaxWorkerInfo, tbl_JadualCarumanTambahanList, tbl_ByrCarumanTambahan, false, Guid, GetOtherContribution, NegaraID, SyarikatID, WilayahID, LadangID, tbl_JenisInsentif.Where(x => x.fld_ExcludePCB == true).ToList(), InsentifExcludePCBYearly.Where(x => x.fld_Nopkj == NoPkj).ToList(), tbl_ByrCarumanTambahan, ByrCarumanTambahanList, db2);
                         ByrCarumanTambahanList.Add(byrCarumanTambahan);
                     }
                     else
@@ -1859,7 +1859,7 @@ namespace SalaryGeneratorServices.FuncClass
             {
                 B = MRB.fld_Category2_B;
             }
-            X = tbl_ByrCarumanTambahan.Sum(s => s.fld_CarumanPekerja);
+            X = tbl_ByrCarumanTambahan.Where(x => x.fld_Month != month).Sum(s => s.fld_CarumanPekerja);
 
             PCBM = (((P - M) * R + B) - (Z + X)) / (n + 1);
             PCBM = PCBM < 10 ? 0 : PCBM;
