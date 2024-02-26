@@ -129,5 +129,7 @@ namespace SalaryGeneratorServices.ModelsEstate
 
         [StringLength(20)]
         public string fld_NopkjPermanent { get; set; }
+
+        public decimal? fld_TaxReliefInsentive { get; set; }
     }
 }

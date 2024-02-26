@@ -52,5 +52,10 @@ namespace SalaryGeneratorServices.ModelsHQ
         //added by faeza 26.02.2023
         public bool? fld_InclSecondPayslip { get; set; }
 
+        public bool? fld_ExcludePCB { get; set; }
+
+        [StringLength(10)]
+        public string fld_TaxReliefCode { get; set; }
+
     }
 }
