@@ -69,7 +69,7 @@ namespace SalaryGeneratorServices.ModelsEstate
 
         public decimal? fld_Q { get; set; }
 
-        public int? fld_C { get; set; }
+        public decimal? fld_C { get; set; }
 
         public decimal? fld_LP { get; set; }
 

@@ -1887,7 +1887,7 @@ namespace SalaryGeneratorServices.FuncClass
                 fld_SyarikatID = SyarikatID,
                 fld_NegaraID = NegaraID,
                 fld_B = B,
-                fld_C = int.Parse(C.ToString()),
+                fld_C = C,
                 fld_CarumanPekerjaNet = PCB,
                 fld_CarumanPekerjaYearly = PCBY,
                 fld_D = D,
