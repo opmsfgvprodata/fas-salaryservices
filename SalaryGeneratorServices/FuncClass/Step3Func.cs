@@ -1,4 +1,5 @@
-﻿using SalaryGeneratorServices.CustomModels;
+﻿using Newtonsoft.Json.Linq;
+using SalaryGeneratorServices.CustomModels;
 using SalaryGeneratorServices.ModelsCustom;
 using SalaryGeneratorServices.ModelsEstate;
 using SalaryGeneratorServices.ModelsHQ;
@@ -1776,10 +1777,35 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? K2 = (KLimit - (K + K1 + Kt)) / n;
             K2 = K2 > K1 ? K1 : K2;
 
-            decimal? reliefIncentif_Y = InsentifExcludePCBYearly.Where(x => x.fld_Year == year).Sum(s => s.fld_NilaiInsentif);
+            var incentiveTaxReliefs = tbl_TaxRelief.Where(x => x.fld_VariableCode == "ExcludePCB").ToList();
+            decimal? reliefIncentif_Y = 0m;
+            foreach (var incentiveTaxRelief in incentiveTaxReliefs)
+            {
+                var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode).Select(s => s.fld_KodInsentif).ToList();
+                var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year).Sum(s => s.fld_NilaiInsentif);
+                if (totalIncentive > 0)
+                {
+                    if (incentiveTaxRelief.fld_TaxReliefLimit <= totalIncentive)
+                    {
+                        reliefIncentif_Y += incentiveTaxRelief.fld_TaxReliefLimit;
+                    }
+                }
+            }
             reliefIncentif_Y = reliefIncentif_Y == null ? 0m : reliefIncentif_Y;
-            decimal? Y = tbl_GajiBulanan.Where(x => x.fld_Month != month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
-            decimal? reliefIncentif_Y1 = InsentifExcludePCBYearly.Where(x => x.fld_Year == year && x.fld_Month == month).Sum(s => s.fld_NilaiInsentif);
+            decimal? Y = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
+            decimal? reliefIncentif_Y1 = 0m;
+            foreach (var incentiveTaxRelief in incentiveTaxReliefs)
+            {
+                var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode).Select(s => s.fld_KodInsentif).ToList();
+                var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year && x.fld_Month == month).Sum(s => s.fld_NilaiInsentif);
+                if (totalIncentive > 0)
+                {
+                    if (incentiveTaxRelief.fld_TaxReliefLimit <= totalIncentive)
+                    {
+                        reliefIncentif_Y1 += incentiveTaxRelief.fld_TaxReliefLimit;
+                    }
+                }
+            }
             reliefIncentif_Y1 = reliefIncentif_Y1 == null ? 0m : reliefIncentif_Y1;
             decimal? Y1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_GajiKasar).FirstOrDefault() - reliefIncentif_Y1;
 
@@ -1792,7 +1818,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? Y2 = Y1;
             decimal? Yt = 0;
 
-            decimal? socso = tbl_GajiBulanan.Where(x => x.fld_Month != month).Sum(s => s.fld_SocsoPkj);
+            decimal? socso = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_SocsoPkj);
             decimal? sip = AllByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SIP").Sum(s => s.fld_CarumanPekerja);
             decimal? sbkp = AllByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SBKP").Sum(s => s.fld_CarumanPekerja);
 
@@ -1865,20 +1891,20 @@ namespace SalaryGeneratorServices.FuncClass
 
             PCBM = (((P - M) * R + B) - (Z + X)) / (n + 1);
             PCBM = PCBM < 10 ? 0 : PCBM;
-            PCBM = Round(PCBM.Value);
+            PCBM = TruncateDecimal(PCBM.Value);
             PCB = PCBM - Z;
             PCB = PCB < 0 ? 0 : PCB;
             PCB = Round(PCB.Value);
-            PCBY = ((P - M) * R + B);
+            PCBY = (P - M) * R + B;
             PCBY = PCBY < 0 ? 0 : PCBY;
-            PCBY = Round(PCBY.Value);
+            PCBY = TruncateDecimal(PCBY.Value);
 
             var byrCarumanTambahan = new tbl_ByrCarumanTambahan
             {
                 fld_GajiID = Guid,
                 fld_KodCaruman = GetOtherContribution.fld_KodCaruman,
                 fld_KodSubCaruman = GetOtherContribution.fld_KodSubCaruman,
-                fld_CarumanPekerja = PCBM,
+                fld_CarumanPekerja = PCB,
                 fld_CarumanMajikan = 0,
                 fld_Month = month,
                 fld_Year = year,
@@ -1888,7 +1914,7 @@ namespace SalaryGeneratorServices.FuncClass
                 fld_NegaraID = NegaraID,
                 fld_B = B,
                 fld_C = C,
-                fld_CarumanPekerjaNet = PCB,
+                fld_CarumanPekerjaNet = PCBM,
                 fld_CarumanPekerjaYearly = PCBY,
                 fld_D = D,
                 fld_Du = Du,
@@ -1936,6 +1962,13 @@ namespace SalaryGeneratorServices.FuncClass
                 return 0;
             }
             return ceiling / 20;
+        }
+
+        public static decimal TruncateDecimal(decimal value)
+        {
+            decimal step = (decimal)Math.Pow(10, 2);
+            decimal tmp = Math.Truncate(step * value);
+            return tmp / step;
         }
         //Added by Shah 01_01_2024
 
