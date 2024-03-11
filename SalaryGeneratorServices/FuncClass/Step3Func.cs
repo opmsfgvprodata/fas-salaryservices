@@ -1781,7 +1781,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? reliefIncentif_Y = 0m;
             foreach (var incentiveTaxRelief in incentiveTaxReliefs)
             {
-                var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode).Select(s => s.fld_KodInsentif).ToList();
+                var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode && x.fld_JenisInsentif != "T").Select(s => s.fld_KodInsentif).ToList();
                 var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year).Sum(s => s.fld_NilaiInsentif);
                 if (totalIncentive > 0)
                 {
@@ -1796,7 +1796,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? reliefIncentif_Y1 = 0m;
             foreach (var incentiveTaxRelief in incentiveTaxReliefs)
             {
-                var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode).Select(s => s.fld_KodInsentif).ToList();
+                var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode && x.fld_JenisInsentif != "T").Select(s => s.fld_KodInsentif).ToList();
                 var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year && x.fld_Month == month).Sum(s => s.fld_NilaiInsentif);
                 if (totalIncentive > 0)
                 {
@@ -1844,6 +1844,40 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? PCBY = 0;
             decimal? PCBM = 0;
             decimal? PCB = 0;
+
+            foreach (var incentiveTaxRelief in incentiveTaxReliefs)
+            {
+                var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode && x.fld_JenisInsentif == "T").Select(s => s.fld_KodInsentif).ToList();
+                var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year).Sum(s => s.fld_NilaiInsentif);
+                if (totalIncentive > 0)
+                {
+                    if (incentiveTaxRelief.fld_TaxReliefLimit >= totalIncentive)
+                    {
+                        LP += totalIncentive;
+                    }
+                    else
+                    {
+                        LP = incentiveTaxRelief.fld_TaxReliefLimit;
+                    }
+                }
+            }
+
+            foreach (var incentiveTaxRelief in incentiveTaxReliefs)
+            {
+                var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode && x.fld_JenisInsentif == "T").Select(s => s.fld_KodInsentif).ToList();
+                var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year && x.fld_Month == month).Sum(s => s.fld_NilaiInsentif);
+                if (totalIncentive > 0)
+                {
+                    if (incentiveTaxRelief.fld_TaxReliefLimit >= totalIncentive)
+                    {
+                        LP1 += totalIncentive;
+                    }
+                    else
+                    {
+                        LP1 = incentiveTaxRelief.fld_TaxReliefLimit;
+                    }
+                }
+            }
 
             decimal? CB18F = tbl_TaxWorkerInfo.fld_ChildBelow18Full;
             decimal? CB18H = tbl_TaxWorkerInfo.fld_ChildBelow18Half * (decimal)0.5;
