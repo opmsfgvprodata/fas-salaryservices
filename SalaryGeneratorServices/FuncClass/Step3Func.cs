@@ -1834,14 +1834,18 @@ namespace SalaryGeneratorServices.FuncClass
                         var noPkjPermanent = tbl_Pkjmasts.Where(x => x.fld_Nopkj == NoPkj).Select(s => s.fld_NopkjPermanent).FirstOrDefault();
                         var tbl_GajiBulanan = db2.tbl_GajiBulanan.Where(x => x.fld_NopkjPermanent == noPkjPermanent && x.fld_Year == Year).ToList();
                         PCBResidentBonus(tbl_GajiBulanan, Month, Year, tbl_TaxRelief, tbl_TaxWorkerInfo, tbl_JadualCarumanTambahanList, ByrCarumanTambahanList, false, GetOtherContribution, NegaraID, SyarikatID, WilayahID, LadangID, db2, tbl_SpecialInsentif);
-                        //ByrCarumanTambahanList.Add(byrCarumanTambahan);
                     }
                     else
                     {
+                        var workerSpecialInsentif = tbl_SpecialInsentif.Where(x => x.fld_Month == Month).FirstOrDefault();
                         var kadar = tbl_SubCarumanTambahan.Where(x => x.fld_KodCaruman == GetOtherContribution.fld_KodCaruman && x.fld_KodSubCaruman == GetOtherContribution.fld_KodSubCaruman).Select(s => s.fld_KadarPekerja).FirstOrDefault();
-                        ContriPkj = kadar * TotalSalaryForOtherContribution;
+                        ContriPkj = kadar * workerSpecialInsentif.fld_NilaiInsentif;
                         ContriPkj = Round(ContriPkj.Value);
-                        //ByrCarumanTambahanList.Add(new tbl_ByrCarumanTambahan() { fld_GajiID = Guid, fld_KodCaruman = GetOtherContribution.fld_KodCaruman, fld_KodSubCaruman = GetOtherContribution.fld_KodSubCaruman, fld_CarumanPekerja = ContriPkj, fld_CarumanMajikan = 0, fld_Month = Month, fld_Year = Year, fld_LadangID = LadangID, fld_WilayahID = WilayahID, fld_SyarikatID = SyarikatID, fld_NegaraID = NegaraID });
+
+                        workerSpecialInsentif.fld_CarumanPekerjaNet = ContriPkj;
+                        workerSpecialInsentif.fld_PCBCarumanPekerja = ContriPkj;
+                        db2.Entry(workerSpecialInsentif).State = EntityState.Modified;
+                        await db2.SaveChangesAsync();
                     }
                     //Added by Shah 01_01_2024
                 }
