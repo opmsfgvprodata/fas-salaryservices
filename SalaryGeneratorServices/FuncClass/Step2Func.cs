@@ -2,6 +2,7 @@
 using SalaryGeneratorServices.ModelsHQ;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -318,6 +319,10 @@ namespace SalaryGeneratorServices.FuncClass
                 SpecialInsentifData.fld_CreatedBy = UserID;
                 SpecialInsentifData.fld_CreatedDT = DTProcess;
                 SpecialInsentifData.fld_InsentifID = SpecialInsentifList2.fld_InsentifID;
+                SpecialInsentifData.fld_KWSPMjk = 0;
+                SpecialInsentifData.fld_KWSPPkj = 0;
+                SpecialInsentifData.fld_SocsoMjk = 0;
+                SpecialInsentifData.fld_SocsoPkj = 0;
                 SpecialInsentif = SpecialInsentifData;
             }
             else
@@ -388,6 +393,18 @@ namespace SalaryGeneratorServices.FuncClass
             db2.tbl_SpecialInsentif.AddRange(SpecialInsentif);
             await db2.SaveChangesAsync();
             db2.Dispose();          
+        }
+
+        public async Task<List<tbl_SpecialInsentif>> GetSpecialInsentif(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? Month, int? Year)
+        {
+            GetConnectFunc conn = new GetConnectFunc();
+            string host, catalog, user, pass = "";
+            conn.GetConnection(out host, out catalog, out user, out pass, WilayahID, SyarikatID, NegaraID);
+            GenSalaryModelEstate db2 = GenSalaryModelEstate.ConnectToSqlServer(host, catalog, user, pass);
+
+            var specialInsentif = await db2.tbl_SpecialInsentif.Where(x=>x.fld_LadangID == LadangID && x.fld_Year == Year).ToListAsync();
+            db2.Dispose();
+            return specialInsentif;
         }
 
         //comment by faeza 26.09.2022 - original code
