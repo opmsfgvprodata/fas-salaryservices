@@ -2104,7 +2104,7 @@ namespace SalaryGeneratorServices.FuncClass
             var workerSpecialInsentif = tbl_SpecialInsentif.Where(x => x.fld_Month == month).FirstOrDefault();
 
             workerSpecialInsentif.fld_B = B;
-            workerSpecialInsentif.fld_C = int.Parse(C.ToString());
+            workerSpecialInsentif.fld_C = int.Parse(decimal.Round(C.Value).ToString());
             workerSpecialInsentif.fld_D = D;
             workerSpecialInsentif.fld_Du = Du;
             workerSpecialInsentif.fld_K = K;
@@ -2114,8 +2114,8 @@ namespace SalaryGeneratorServices.FuncClass
             workerSpecialInsentif.fld_LP = LP;
             workerSpecialInsentif.fld_LP1 = LP1;
             workerSpecialInsentif.fld_M = M;
-            workerSpecialInsentif.fld_n = int.Parse(n.ToString());
-            workerSpecialInsentif.fld_n1 = int.Parse(n1.ToString());
+            workerSpecialInsentif.fld_n = int.Parse(decimal.Round(n.Value).ToString());
+            workerSpecialInsentif.fld_n1 = int.Parse(decimal.Round(n1.Value).ToString());
             workerSpecialInsentif.fld_P = P;
             workerSpecialInsentif.fld_Q = Q;
             workerSpecialInsentif.fld_R = R;
