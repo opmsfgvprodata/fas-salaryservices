@@ -1844,6 +1844,7 @@ namespace SalaryGeneratorServices.FuncClass
 
                         workerSpecialInsentif.fld_CarumanPekerjaNet = ContriPkj;
                         workerSpecialInsentif.fld_PCBCarumanPekerja = ContriPkj;
+                        workerSpecialInsentif.fld_GajiBersih = workerSpecialInsentif.fld_GajiKasar - workerSpecialInsentif.fld_KWSPPkj - workerSpecialInsentif.fld_PCBCarumanPekerja;
                         db2.Entry(workerSpecialInsentif).State = EntityState.Modified;
                         await db2.SaveChangesAsync();
                     }
@@ -2104,8 +2105,6 @@ namespace SalaryGeneratorServices.FuncClass
 
             workerSpecialInsentif.fld_B = B;
             workerSpecialInsentif.fld_C = int.Parse(C.ToString());
-            workerSpecialInsentif.fld_CarumanPekerjaNet = PCB;
-            workerSpecialInsentif.fld_CarumanPekerjaYearly = PCBY;
             workerSpecialInsentif.fld_D = D;
             workerSpecialInsentif.fld_Du = Du;
             workerSpecialInsentif.fld_K = K;
@@ -2144,6 +2143,7 @@ namespace SalaryGeneratorServices.FuncClass
             workerSpecialInsentif.fld_CarumanPekerjaNet = PCB;
             workerSpecialInsentif.fld_CarumanPekerjaYearly = PCBY;
             workerSpecialInsentif.fld_PCBCarumanPekerja = PCBM;
+            workerSpecialInsentif.fld_GajiBersih = workerSpecialInsentif.fld_GajiKasar - workerSpecialInsentif.fld_KWSPPkj - workerSpecialInsentif.fld_PCBCarumanPekerja;
             db2.Entry(workerSpecialInsentif).State = EntityState.Modified;
             db2.SaveChanges();
         }

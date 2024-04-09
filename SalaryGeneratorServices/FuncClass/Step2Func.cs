@@ -323,6 +323,8 @@ namespace SalaryGeneratorServices.FuncClass
                 SpecialInsentifData.fld_KWSPPkj = 0;
                 SpecialInsentifData.fld_SocsoMjk = 0;
                 SpecialInsentifData.fld_SocsoPkj = 0;
+                SpecialInsentifData.fld_GajiKasar = SpecialInsentifList2.fld_NilaiInsentif;
+                SpecialInsentifData.fld_GajiBersih = 0;
                 SpecialInsentif = SpecialInsentifData;
             }
             else

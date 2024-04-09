@@ -135,5 +135,11 @@ namespace SalaryGeneratorServices.ModelsEstate
 
         [Column(TypeName = "numeric")]
         public decimal? fld_PCBCarumanPekerja {  get; set; }
+
+        [Column(TypeName = "numeric")]
+        public decimal? fld_GajiKasar { get; set; }
+
+        [Column(TypeName = "numeric")]
+        public decimal? fld_GajiBersih { get; set; }
     }
 }
