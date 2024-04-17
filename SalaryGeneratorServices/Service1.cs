@@ -32,7 +32,7 @@ namespace SalaryGeneratorServices
 
         public Service1()
         {
-           // _ = DoProcess();
+            _ = DoProcess();
         }
 
         private async Task DoProcess()
@@ -165,14 +165,11 @@ namespace SalaryGeneratorServices
                     Pkjmstlists = await Step1Func.GetActiveWorkerFunc(NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, tbl_Pkjmast);
                     PkjmstlistsAll = Step1Func.GetAllWorkerFunc(NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, tbl_Pkjmast);
                     WriteLog("Get Active Worker. (Data - Total Active Worker : " + Pkjmstlists.Count + ")", false, ServiceName, ServiceProcessID);
-                    SpecialInsentifRemoveCount = RemoveDataFunc.RemoveData_tbl_SpecialInsentif(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, PkjmstlistsAll, tbl_JenisInsentifSpecial);
-                    WriteLog("Removed Incentive from tbl_SpecialInsentif. (Data - Total Data Removed : " + KerjaOTRemoveCount + ")", false, ServiceName, ServiceProcessID);
-
-                    Step3Func.GetPkjMastsData(Pkjmstlists);
-
+                    
                     #region Normal Salary Gen
                     if (SevicesProcess.fld_ProcessName == "LadangSalaryGen")
                     {
+                        Step3Func.GetPkjMastsData(Pkjmstlists);
                         KerjaBonusRemoveCount = RemoveDataFunc.RemoveData_tbl_KerjaBonus(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, PkjmstlistsAll);
                         WriteLog("Removed Calculation Kerja Bonus Data. (Data - Total Data Removed : " + KerjaBonusRemoveCount + ")", false, ServiceName, ServiceProcessID);
                         KerjaOTRemoveCount = RemoveDataFunc.RemoveData_tbl_KerjaOT(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, PkjmstlistsAll);
@@ -604,6 +601,8 @@ namespace SalaryGeneratorServices
 
                     else if (SevicesProcess.fld_ProcessName == "LadangSalaryGenBonus")
                     {
+                        SpecialInsentifRemoveCount = RemoveDataFunc.RemoveData_tbl_SpecialInsentif(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, PkjmstlistsAll, tbl_JenisInsentifSpecial);
+                        WriteLog("Removed Incentive from tbl_SpecialInsentif. (Data - Total Data Removed : " + KerjaOTRemoveCount + ")", false, ServiceName, ServiceProcessID);
                         if (PkjmstlistsSpecialInsentif != null)
                         {
                             foreach (var Pkjmstlist in PkjmstlistsSpecialInsentif)
@@ -628,6 +627,7 @@ namespace SalaryGeneratorServices
                             }
                             var workerSpecialInsentifs = await Step2Func.GetSpecialInsentif(NegaraID, SyarikatID, WilayahID, LadangID, Month, Year);
                             var workerSpecialWorkerNo = workerSpecialInsentifs.Select(s => s.fld_Nopkj).ToArray();
+                            Step3Func.GetPkjMastsData(PkjmstlistsAll.Where(x => workerSpecialWorkerNo.Contains(x.fld_Nopkj)).ToList());
                             foreach (var Pkjmstlist in PkjmstlistsAll.Where(x=> workerSpecialWorkerNo.Contains(x.fld_Nopkj)).ToList())
                             {
                                 var workerSpecialInsentif = workerSpecialInsentifs.Where(x => x.fld_Nopkj == Pkjmstlist.fld_Nopkj && x.fld_Month == Month).FirstOrDefault();

@@ -19,6 +19,7 @@ namespace SalaryGeneratorServices.FuncClass
         public void GetPkjMastsData(List<tbl_Pkjmast> Pkjmasts)
         {
             tbl_Pkjmasts = Pkjmasts;
+          
         }
         //add by Shah 01.01.2024
 
