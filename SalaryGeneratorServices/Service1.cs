@@ -626,11 +626,12 @@ namespace SalaryGeneratorServices
 
                             }
                             var workerSpecialInsentifs = await Step2Func.GetSpecialInsentif(NegaraID, SyarikatID, WilayahID, LadangID, Month, Year);
-                            var workerSpecialWorkerNo = workerSpecialInsentifs.Select(s => s.fld_Nopkj).ToArray();
+                            var workerSpecialWorkerNo = PkjmstlistsSpecialInsentif.Select(s => s.fld_Nopkj).ToArray();
                             Step3Func.GetPkjMastsData(PkjmstlistsAll.Where(x => workerSpecialWorkerNo.Contains(x.fld_Nopkj)).ToList());
-                            foreach (var Pkjmstlist in PkjmstlistsAll.Where(x=> workerSpecialWorkerNo.Contains(x.fld_Nopkj)).ToList())
+                            foreach (var item in PkjmstlistsSpecialInsentif)
                             {
-                                var workerSpecialInsentif = workerSpecialInsentifs.Where(x => x.fld_Nopkj == Pkjmstlist.fld_Nopkj && x.fld_Month == Month).FirstOrDefault();
+                                var Pkjmstlist = PkjmstlistsAll.Where(x => x.fld_Nopkj == item.fld_Nopkj).FirstOrDefault();
+                                var workerSpecialInsentif = workerSpecialInsentifs.Where(x => x.fld_Nopkj == Pkjmstlist.fld_Nopkj && x.fld_Month == Month && x.fld_KodInsentif == item.fld_KodInsentif).FirstOrDefault();
                                 if (Pkjmstlist.fld_StatusKwspSocso == "1" && workerSpecialInsentif != null)
                                 {
                                     var CustMod_KWSP = await Step3Func.GetKWSPForBonusFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), Pkjmstlist.fld_KodKWSP, false, tbl_Kwsp, workerSpecialInsentif);
@@ -641,7 +642,7 @@ namespace SalaryGeneratorServices
                                 if (workerSpecialInsentif != null)
                                 {
                                     var taxWorkerInfo = tbl_TaxWorkerInfo.Where(x => x.fld_NopkjPermanent == Pkjmstlist.fld_NopkjPermanent).FirstOrDefault();
-                                    var CustMod_OthrCon = await Step3Func.GetOtherContributionsBonusFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), tbl_PkjCarumanTambahan, tbl_SubCarumanTambahan, tbl_JadualCarumanTambahan, tbl_TaxRelief, taxWorkerInfo, workerSpecialInsentifs.Where(x => x.fld_Nopkj == Pkjmstlist.fld_Nopkj).ToList());
+                                    var CustMod_OthrCon = await Step3Func.GetOtherContributionsBonusFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), tbl_PkjCarumanTambahan, tbl_SubCarumanTambahan, tbl_JadualCarumanTambahan, tbl_TaxRelief, taxWorkerInfo, workerSpecialInsentifs.Where(x => x.fld_Nopkj == Pkjmstlist.fld_Nopkj).ToList(), item.fld_KodInsentif);
                                 }
                             }
                         }
@@ -733,27 +734,27 @@ namespace SalaryGeneratorServices
             return getresult;
         }
 
-        public async Task OnDebugAsync()
-        {
-            await OnStartAsync(null);
-        }
-
-        //uncomment for debug
-        //public void OnDebugAsync()
+        //public async Task OnDebugAsync()
         //{
-        //    OnStartAsync(null);
+        //    await OnStartAsync(null);
         //}
 
-        protected async Task OnStartAsync(string[] args)
+        //uncomment for debug
+        public void OnDebugAsync()
         {
-            await DoProcess();
+            OnStartAsync(null);
         }
 
-        //uncomment for debug
-        //protected async void OnStartAsync(string[] args)
+        //protected async Task OnStartAsync(string[] args)
         //{
         //    await DoProcess();
         //}
+
+        //uncomment for debug
+        protected async void OnStartAsync(string[] args)
+        {
+            await DoProcess();
+        }
 
         protected override void OnStop()
         {
