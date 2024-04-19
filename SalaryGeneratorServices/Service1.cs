@@ -169,7 +169,11 @@ namespace SalaryGeneratorServices
                     #region Normal Salary Gen
                     if (SevicesProcess.fld_ProcessName == "LadangSalaryGen")
                     {
-                        Step3Func.GetPkjMastsData(Pkjmstlists);
+                        Step3Func.GetPkjMastsData(Pkjmstlists); 
+                        var tbl_JenisInsentif = await db.tbl_JenisInsentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Deleted == false && x.fld_InclSecondPayslip == false).ToListAsync();
+                        var JenisInsentifExludePCB = tbl_JenisInsentif.Where(x => tbl_TaxRelief.Select(s => s.fld_TaxReliefCode).ToArray().Contains(x.fld_TaxReliefCode)).ToList();
+                        var jenisInsentifExludePCBKod = JenisInsentifExludePCB.Select(s => s.fld_KodInsentif).ToArray();
+                        var InsentifExcludePCBYearly = await db2.tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Year == Year && x.fld_Deleted == false && jenisInsentifExludePCBKod.Contains(x.fld_KodInsentif)).ToListAsync();
                         KerjaBonusRemoveCount = RemoveDataFunc.RemoveData_tbl_KerjaBonus(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, PkjmstlistsAll);
                         WriteLog("Removed Calculation Kerja Bonus Data. (Data - Total Data Removed : " + KerjaBonusRemoveCount + ")", false, ServiceName, ServiceProcessID);
                         KerjaOTRemoveCount = RemoveDataFunc.RemoveData_tbl_KerjaOT(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, PkjmstlistsAll);
@@ -201,7 +205,6 @@ namespace SalaryGeneratorServices
                         var tbl_Kerjahdr = tbl_KerjahdrYearly.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Tarikh.Value.Month == Month && x.fld_Tarikh.Value.Year == Year).ToList();
                         var tbl_PkjIncrmntSalary = await db2.tbl_PkjIncrmntSalary.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_AppStatus == true).ToListAsync();
                         //modified by faeza 26.02.2023 - add fld_InclSecondPayslip == false
-                        var tbl_JenisInsentif = await db.tbl_JenisInsentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Deleted == false && x.fld_InclSecondPayslip == false).ToListAsync();
                         var tbl_Produktiviti = await db2.tbl_Produktiviti.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Month == Month && x.fld_Year == Year).ToListAsync();
                         var tblOptionConfigsWebs = await db.tblOptionConfigsWebs.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fldDeleted == false).ToListAsync();
                         var Attandance = tblOptionConfigsWebs.Where(x => x.fldOptConfFlag1 == "cuti" && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fldDeleted == false).ToList();
@@ -395,7 +398,7 @@ namespace SalaryGeneratorServices
                                             await Step3Func.GetOverallSalaryFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, tbl_JenisInsentif, tbl_Insentif, tblOptionConfigsWebs, tbl_HutangPekerjaJumlah, true);
                                             var taxWorkerInfo = tbl_TaxWorkerInfo.Where(x => x.fld_NopkjPermanent == Pkjmstlist.fld_NopkjPermanent).FirstOrDefault();
                                             //Added by Shah 01_01_2024
-                                            var CustMod_OthrCon = await Step3Func.GetOtherContributionsFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, tbl_PkjCarumanTambahan, tbl_JenisInsentif, tbl_Insentif, tbl_CarumanTambahan, tbl_SubCarumanTambahan, tbl_JadualCarumanTambahan, tbl_TaxRelief, taxWorkerInfo);
+                                            var CustMod_OthrCon = await Step3Func.GetOtherContributionsFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, tbl_PkjCarumanTambahan, tbl_JenisInsentif, tbl_Insentif, tbl_CarumanTambahan, tbl_SubCarumanTambahan, tbl_JadualCarumanTambahan, tbl_TaxRelief, taxWorkerInfo, InsentifExcludePCBYearly);
                                             TotalOthrContMjkCont = CustMod_OthrCon.TotalMjkCont;
                                             TotalOthrContMjkCont = CustMod_OthrCon.TotalPkjCont;
                                             WriteLog("Get Other Contribution. (Data - No Pkj : " + Pkjmstlist.fld_Nopkj.Trim() + ", Employer : RM " + TotalOthrContMjkCont + ", Employee : RM " + TotalOthrContPkjCont + ")", false, ServiceName, ServiceProcessID);
