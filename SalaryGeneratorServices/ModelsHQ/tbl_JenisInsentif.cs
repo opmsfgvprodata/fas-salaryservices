@@ -57,5 +57,7 @@ namespace SalaryGeneratorServices.ModelsHQ
         [StringLength(10)]
         public string fld_TaxReliefCode { get; set; }
 
+        public DateTime? fld_ProcessDT { get; set; }
+
     }
 }
