@@ -16,9 +16,9 @@ namespace SalaryGeneratorServices
         {
 #if DEBUG
             Service1 myService = new Service1();
-            //await myService.OnDebugAsync();
+            await myService.OnDebugAsync();
             //uncomment for debug
-            myService.OnDebugAsync();
+            //myService.OnDebugAsync();
             System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
 #else
             ServiceBase[] ServicesToRun;

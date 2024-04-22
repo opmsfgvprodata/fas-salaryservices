@@ -737,27 +737,27 @@ namespace SalaryGeneratorServices
             return getresult;
         }
 
-        //public async Task OnDebugAsync()
-        //{
-        //    await OnStartAsync(null);
-        //}
-
-        //uncomment for debug
-        public void OnDebugAsync()
+        public async Task OnDebugAsync()
         {
-            OnStartAsync(null);
+            await OnStartAsync(null);
         }
 
-        //protected async Task OnStartAsync(string[] args)
+        //uncomment for debug
+        //public void OnDebugAsync()
         //{
-        //    await DoProcess();
+        //    OnStartAsync(null);
         //}
 
-        //uncomment for debug
-        protected async void OnStartAsync(string[] args)
+        protected async Task OnStartAsync(string[] args)
         {
             await DoProcess();
         }
+
+        //uncomment for debug
+        //protected async void OnStartAsync(string[] args)
+        //{
+        //    await DoProcess();
+        //}
 
         protected override void OnStop()
         {
