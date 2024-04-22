@@ -216,6 +216,8 @@ namespace SalaryGeneratorServices
                         var tbl_HutangPekerjaJumlah = await db2.tbl_HutangPekerjaJumlah.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID).ToListAsync();
                         //Added by Shah 01_01_2024
 
+                        var workerSpecialInsentifs = await Step2Func.GetSpecialInsentif(NegaraID, SyarikatID, WilayahID, LadangID, Month, Year);
+
                         if (!Pkjmstlists.Any(x => x.fld_NopkjPermanent == null))
                         {
                             foreach (var Pkjmstlist in Pkjmstlists)
@@ -398,7 +400,8 @@ namespace SalaryGeneratorServices
                                             await Step3Func.GetOverallSalaryFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, tbl_JenisInsentif, tbl_Insentif, tblOptionConfigsWebs, tbl_HutangPekerjaJumlah, true);
                                             var taxWorkerInfo = tbl_TaxWorkerInfo.Where(x => x.fld_NopkjPermanent == Pkjmstlist.fld_NopkjPermanent).FirstOrDefault();
                                             //Added by Shah 01_01_2024
-                                            var CustMod_OthrCon = await Step3Func.GetOtherContributionsFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, tbl_PkjCarumanTambahan, tbl_JenisInsentif, tbl_Insentif, tbl_CarumanTambahan, tbl_SubCarumanTambahan, tbl_JadualCarumanTambahan, tbl_TaxRelief, taxWorkerInfo, InsentifExcludePCBYearly);
+                                            var workerSpecialInsentif = workerSpecialInsentifs.Where(x => x.fld_Nopkj == Pkjmstlist.fld_Nopkj).ToList();
+                                            var CustMod_OthrCon = await Step3Func.GetOtherContributionsFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, tbl_PkjCarumanTambahan, tbl_JenisInsentif, tbl_Insentif, tbl_CarumanTambahan, tbl_SubCarumanTambahan, tbl_JadualCarumanTambahan, tbl_TaxRelief, taxWorkerInfo, InsentifExcludePCBYearly, workerSpecialInsentif);
                                             TotalOthrContMjkCont = CustMod_OthrCon.TotalMjkCont;
                                             TotalOthrContMjkCont = CustMod_OthrCon.TotalPkjCont;
                                             WriteLog("Get Other Contribution. (Data - No Pkj : " + Pkjmstlist.fld_Nopkj.Trim() + ", Employer : RM " + TotalOthrContMjkCont + ", Employee : RM " + TotalOthrContPkjCont + ")", false, ServiceName, ServiceProcessID);

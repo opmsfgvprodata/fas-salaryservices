@@ -1692,7 +1692,7 @@ namespace SalaryGeneratorServices.FuncClass
             return CustMod_Socso;
         }
 
-        public async Task<CustMod_OthrCon> GetOtherContributionsFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, List<tbl_PkjCarumanTambahan> tbl_PkjCarumanTambahan, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tbl_CarumanTambahan> tbl_CarumanTambahan, List<tbl_SubCarumanTambahan> tbl_SubCarumanTambahan, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahanList, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo, List<tbl_Insentif> InsentifExcludePCBYearly)
+        public async Task<CustMod_OthrCon> GetOtherContributionsFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, List<tbl_PkjCarumanTambahan> tbl_PkjCarumanTambahan, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tbl_CarumanTambahan> tbl_CarumanTambahan, List<tbl_SubCarumanTambahan> tbl_SubCarumanTambahan, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahanList, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo, List<tbl_Insentif> InsentifExcludePCBYearly, List<tbl_SpecialInsentif> specialIncentive)
         {
             GenSalaryModelHQ db = new GenSalaryModelHQ();
             GetConnectFunc conn = new GetConnectFunc();
@@ -1778,7 +1778,7 @@ namespace SalaryGeneratorServices.FuncClass
                         var tbl_GajiBulanan = db2.tbl_GajiBulanan.Where(x => x.fld_NopkjPermanent == noPkjPermanent && x.fld_Year == Year).ToList();
                         var tbl_GajiBulananIDs = tbl_GajiBulanan.Select(s => s.fld_ID).ToArray();
                         var tbl_ByrCarumanTambahan = db2.tbl_ByrCarumanTambahan.Where(x => tbl_GajiBulananIDs.Contains(x.fld_GajiID.Value)).ToList();
-                        var byrCarumanTambahan = PCBResident(tbl_GajiBulanan, Month, Year, tbl_TaxRelief, tbl_TaxWorkerInfo, tbl_JadualCarumanTambahanList, tbl_ByrCarumanTambahan, false, Guid, GetOtherContribution, NegaraID, SyarikatID, WilayahID, LadangID, tbl_JenisInsentif.Where(x => x.fld_ExcludePCB == true).ToList(), InsentifExcludePCBYearly.Where(x => x.fld_Nopkj == NoPkj).ToList(), tbl_ByrCarumanTambahan, ByrCarumanTambahanList, db2);
+                        var byrCarumanTambahan = PCBResident(tbl_GajiBulanan, Month, Year, tbl_TaxRelief, tbl_TaxWorkerInfo, tbl_JadualCarumanTambahanList, tbl_ByrCarumanTambahan, false, Guid, GetOtherContribution, NegaraID, SyarikatID, WilayahID, LadangID, tbl_JenisInsentif.Where(x => x.fld_ExcludePCB == true).ToList(), InsentifExcludePCBYearly.Where(x => x.fld_Nopkj == NoPkj).ToList(), tbl_ByrCarumanTambahan, ByrCarumanTambahanList, db2, specialIncentive);
                         ByrCarumanTambahanList.Add(byrCarumanTambahan);
                     }
                     else
@@ -1870,11 +1870,11 @@ namespace SalaryGeneratorServices.FuncClass
         }
 
         //Added by Shah 01_01_2024
-        public tbl_ByrCarumanTambahan PCBResident(List<tbl_GajiBulanan> tbl_GajiBulanan, int? month, int? year, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahan, List<tbl_ByrCarumanTambahan> tbl_ByrCarumanTambahan, bool isAdditional, Guid Guid, tbl_PkjCarumanTambahan GetOtherContribution, int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> InsentifExcludePCBYearly, List<tbl_ByrCarumanTambahan> AllByrCarumanTambahan, List<tbl_ByrCarumanTambahan> CurrentByrCarumanTambahan, GenSalaryModelEstate db)
+        public tbl_ByrCarumanTambahan PCBResident(List<tbl_GajiBulanan> tbl_GajiBulanan, int? month, int? year, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahan, List<tbl_ByrCarumanTambahan> tbl_ByrCarumanTambahan, bool isAdditional, Guid Guid, tbl_PkjCarumanTambahan GetOtherContribution, int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> InsentifExcludePCBYearly, List<tbl_ByrCarumanTambahan> AllByrCarumanTambahan, List<tbl_ByrCarumanTambahan> CurrentByrCarumanTambahan, GenSalaryModelEstate db, List<tbl_SpecialInsentif> specialIncentive)
         {
             string maritulStatus = tbl_TaxWorkerInfo.fld_TaxMaritalStatus;
             decimal? KLimit = tbl_TaxRelief.Where(x => x.fld_VariableCode == "K").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
-            decimal? K = tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
+            decimal? K = tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj) + +specialIncentive.Where(x => x.fld_Month <= month).Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
             decimal? K1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_KWSPPkj).FirstOrDefault();
             decimal? Kt = 0;
             decimal? n = 12m - decimal.Parse(month.ToString());
@@ -1897,7 +1897,7 @@ namespace SalaryGeneratorServices.FuncClass
                 }
             }
             reliefIncentif_Y = reliefIncentif_Y == null ? 0m : reliefIncentif_Y;
-            decimal? Y = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
+            decimal? Y = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y + specialIncentive.Where(x => x.fld_Month <= month).Sum(s=>s.fld_NilaiInsentif);
             decimal? reliefIncentif_Y1 = 0m;
             foreach (var incentiveTaxRelief in incentiveTaxReliefs)
             {
