@@ -1874,7 +1874,11 @@ namespace SalaryGeneratorServices.FuncClass
         {
             string maritulStatus = tbl_TaxWorkerInfo.fld_TaxMaritalStatus;
             decimal? KLimit = tbl_TaxRelief.Where(x => x.fld_VariableCode == "K").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
-            decimal? K = tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
+            decimal? K = 0;
+            if (tbl_GajiBulanan.Count() > 1)
+            {
+                K = tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
+            }
             decimal? K1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_KWSPPkj).FirstOrDefault();
             decimal? Kt = 0;
             decimal? n = 12m - decimal.Parse(month.ToString());
@@ -1897,7 +1901,11 @@ namespace SalaryGeneratorServices.FuncClass
                 }
             }
             reliefIncentif_Y = reliefIncentif_Y == null ? 0m : reliefIncentif_Y;
-            decimal? Y = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
+            decimal? Y = 0;
+            if (tbl_GajiBulanan.Count() > 1)
+            {
+                Y = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
+            }
             decimal? reliefIncentif_Y1 = 0m;
             foreach (var incentiveTaxRelief in incentiveTaxReliefs)
             {
@@ -1927,7 +1935,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? sip = AllByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SIP").Sum(s => s.fld_CarumanPekerja);
             decimal? sbkp = AllByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SBKP").Sum(s => s.fld_CarumanPekerja);
 
-            decimal? socso1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_SocsoPkj).FirstOrDefault(); ;
+            decimal? socso1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_SocsoPkj).FirstOrDefault();
             decimal? sip1 = CurrentByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SIP").Sum(s => s.fld_CarumanPekerja);
             decimal? sbkp1 = CurrentByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SBKP").Sum(s => s.fld_CarumanPekerja);
 
