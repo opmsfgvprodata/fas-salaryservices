@@ -672,11 +672,54 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? AmountMix = 0;
 
             var GetSocso = db.tblOptionConfigsWebs.Where(x => x.fldOptConfFlag1 == "socso" && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fldDeleted == false).ToList();
-            var NoPkjListTKTDetails = PkjMastList.ToArray();
+            // Pkerja Tempatan
+            var NoPkjListTKTDetails = PkjMastList.Where(x => x.fld_Kdrkyt == "MA").ToArray();
             var tbl_GajiBulanan = db2.tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Month == Month && x.fld_Year == Year).ToList();
             var SocsoMix = db.tblOptionConfigsWebs.Where(x => x.fldOptConfFlag1 == "socsomix" && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fldDeleted == false).FirstOrDefault();
             var GetCostCenterList = NoPkjListTKTDetails.Select(s => s.fld_KodSAPPekerja).Distinct().ToList();
             var tbl_CustomerVendorGLMap = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Deleted == false).ToList();
+            foreach (var GetCostCenter in GetCostCenterList)
+            {
+                AmountMix = 0;
+                var NoPkjList = NoPkjListTKTDetails.Where(x => x.fld_KodSAPPekerja == GetCostCenter).Select(s => s.fld_Nopkj).ToArray();
+                foreach (var Socso in GetSocso)
+                {
+                    Amount = Socso.fldOptConfFlag3 == "Employee" ?
+                    tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Month == Month && x.fld_Year == Year && NoPkjList.Contains(x.fld_Nopkj)).Sum(s => s.fld_SocsoPkj)
+                    :
+                    tbl_GajiBulanan.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Month == Month && x.fld_Year == Year && NoPkjList.Contains(x.fld_Nopkj)).Sum(s => s.fld_SocsoMjk);
+
+                    Amount = Amount == null ? 0 : Amount;
+
+                    if (Amount != 0)
+                    {
+                        var GetSocsoGL = tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodAktiviti == Socso.fldOptConfValue && x.fld_Flag == "1" && x.fld_TypeCode == "GL" && x.fld_Deleted == false).Select(s => s.fld_SAPCode).FirstOrDefault();
+                        GetSocsoGL = GetSocsoGL != null ? GetSocsoGL : "-";
+                        AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, Amount, 0, "-", Socso.fldOptConfValue.Substring(0, 2), Socso.fldOptConfValue, Socso.fldOptConfFlag2, Socso.fldOptConfDesc, DTProcess, UserID, Month, Year, "D", 8, GetSocsoGL, "-", GetCostCenter, "-");
+                        message = "Transaction Listing (Socso " + Socso.fldOptConfFlag3 + "). (Data - Code Activity : " + Socso.fldOptConfValue + ", Amount : RM " + Amount + ")";
+                        Log += i == 1 ? DateTimeFunc.GetDateTime() + " - " + message : "\r\n" + DateTimeFunc.GetDateTime() + " - " + message;
+                        i++;
+                    }
+                    AmountMix = AmountMix + Amount;
+                }
+
+                //var SocsoMix = db.tblOptionConfigsWebs.Where(x => x.fldOptConfFlag1 == "socsomix" && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fldDeleted == false).FirstOrDefault();
+
+                if (AmountMix != 0)
+                {
+                    var GetSocsoGL = tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodAktiviti == SocsoMix.fldOptConfValue && x.fld_Flag == "3" && x.fld_TypeCode == "GL" && x.fld_Deleted == false).Select(s => s.fld_SAPCode).FirstOrDefault();
+                    AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, AmountMix, 0, "-", SocsoMix.fldOptConfValue.Substring(0, 2), SocsoMix.fldOptConfValue, SocsoMix.fldOptConfFlag2, SocsoMix.fldOptConfDesc, DTProcess, UserID, Month, Year, "C", 8, GetSocsoGL, "-", "-", "-");
+                    message = "Transaction Listing (Socso " + SocsoMix.fldOptConfFlag3 + "). (Data - Code Activity : " + SocsoMix.fldOptConfValue + ", Amount : RM " + AmountMix + ")";
+                    Log += i == 1 ? DateTimeFunc.GetDateTime() + " - " + message : "\r\n" + DateTimeFunc.GetDateTime() + " - " + message;
+                    i++;
+                }
+            }
+
+            // Pkerja Asing
+            NoPkjListTKTDetails = PkjMastList.Where(x => x.fld_Kdrkyt != "MA").ToArray();
+            SocsoMix = db.tblOptionConfigsWebs.Where(x => x.fldOptConfFlag1 == "socsomix" && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fldDeleted == false).FirstOrDefault();
+            GetCostCenterList = NoPkjListTKTDetails.Select(s => s.fld_KodSAPPekerja).Distinct().ToList();
+            tbl_CustomerVendorGLMap = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Deleted == false).ToList();
             foreach (var GetCostCenter in GetCostCenterList)
             {
                 AmountMix = 0;

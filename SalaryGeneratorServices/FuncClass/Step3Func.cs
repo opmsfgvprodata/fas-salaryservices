@@ -1636,7 +1636,7 @@ namespace SalaryGeneratorServices.FuncClass
             return CustMod_KWSP;
         }
 
-        public async Task<CustMod_Socso> GetSocsoFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, string KodCaruman, bool NoSocso, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tbl_Socso> tbl_Socso)
+        public async Task<CustMod_Socso> GetSocsoFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, string KodCaruman, bool NoSocso, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tbl_Socso> tbl_Socso, DateTime? birthdate, List<tbl_JenisCaruman> tbl_JenisCarumanSocso)
         {
             GenSalaryModelHQ db = new GenSalaryModelHQ();
             GetConnectFunc conn = new GetConnectFunc();
@@ -1650,6 +1650,19 @@ namespace SalaryGeneratorServices.FuncClass
             GajiBulanan = await db2.tbl_GajiBulanan.FindAsync(Guid);
             decimal? SocsoMjk = 0;
             decimal? SocsoPkj = 0;
+
+            //Check correct socso code
+            int workerAge = CalculateAge(birthdate);
+            var correctSocsoCode = tbl_JenisCarumanSocso.Where(x => workerAge >= x.fld_UmurLower && workerAge <= x.fld_UmurUpper).Select(s => s.fld_KodCaruman).FirstOrDefault();
+            if (correctSocsoCode != KodCaruman)
+            {
+                var worker = db2.tbl_Pkjmast.Where(x => x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj).FirstOrDefault();
+                worker.fld_KodSocso = correctSocsoCode;
+                db2.Entry(worker).State = EntityState.Modified;
+                db.SaveChanges();
+                KodCaruman = correctSocsoCode;
+            }
+
             if (NoSocso)
             {
                 SocsoMjk = 0;
@@ -1690,6 +1703,28 @@ namespace SalaryGeneratorServices.FuncClass
             db2.Dispose();
             db.Dispose();
             return CustMod_Socso;
+        }
+
+        static int CalculateAge(DateTime? birthdate)
+        {
+            // Get today's date
+            DateTime today = DateTime.Today;
+
+            int age = 0;
+
+            if (birthdate != null)
+            {
+                // Calculate the age
+                age = today.Year - birthdate.Value.Year;
+
+                // Check if the birthday for this year has occurred or not
+                if (today.Month < birthdate.Value.Month || (today.Month == birthdate.Value.Month && today.Day < birthdate.Value.Day))
+                {
+                    age--;
+                }
+            }
+
+            return age;
         }
 
         public async Task<CustMod_OthrCon> GetOtherContributionsFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, Guid Guid, List<tbl_PkjCarumanTambahan> tbl_PkjCarumanTambahan, List<tbl_JenisInsentif> tbl_JenisInsentif, List<tbl_Insentif> tbl_Insentif, List<tbl_CarumanTambahan> tbl_CarumanTambahan, List<tbl_SubCarumanTambahan> tbl_SubCarumanTambahan, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahanList, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo, List<tbl_Insentif> InsentifExcludePCBYearly)

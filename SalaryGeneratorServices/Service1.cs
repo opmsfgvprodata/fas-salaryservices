@@ -216,6 +216,8 @@ namespace SalaryGeneratorServices
                         var tbl_HutangPekerjaJumlah = await db2.tbl_HutangPekerjaJumlah.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID).ToListAsync();
                         //Added by Shah 01_01_2024
 
+                        var tbl_JenisCarumanSocso = await db.tbl_JenisCaruman.Where(x => x.fld_JenisCaruman == "SOCSO" && x.fldSyarikatID == SyarikatID && x.fld_Deleted == false).ToListAsync();
+
                         if (!Pkjmstlists.Any(x => x.fld_NopkjPermanent == null))
                         {
                             foreach (var Pkjmstlist in Pkjmstlists)
@@ -384,14 +386,14 @@ namespace SalaryGeneratorServices
 
                                             if (Pkjmstlist.fld_StatusKwspSocso == "1")
                                             {
-                                                var CustMod_Socso = await Step3Func.GetSocsoFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, Pkjmstlist.fld_KodSocso, false, tbl_JenisInsentif, tbl_Insentif, tbl_Socso);
+                                                var CustMod_Socso = await Step3Func.GetSocsoFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, Pkjmstlist.fld_KodSocso, false, tbl_JenisInsentif, tbl_Insentif, tbl_Socso, Pkjmstlist.fld_Trlhr, tbl_JenisCarumanSocso);
                                                 SocsoMjkn = CustMod_Socso.SocsoMjk;
                                                 SocsoPkj = CustMod_Socso.SocsoPkj;
                                                 WriteLog("Get Socso. (Data - No Pkj : " + Pkjmstlist.fld_Nopkj.Trim() + ", Employer : RM " + SocsoMjkn + ", Employee : RM " + SocsoPkj + ")", false, ServiceName, ServiceProcessID);
                                             }
                                             else
                                             {
-                                                await Step3Func.GetSocsoFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, Pkjmstlist.fld_KodSocso, true, tbl_JenisInsentif, tbl_Insentif, tbl_Socso);
+                                                await Step3Func.GetSocsoFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), MonthSalaryID, Pkjmstlist.fld_KodSocso, true, tbl_JenisInsentif, tbl_Insentif, tbl_Socso, Pkjmstlist.fld_Trlhr, tbl_JenisCarumanSocso);
                                                 WriteLog("No Socso. (Data - No Pkj : " + Pkjmstlist.fld_Nopkj.Trim() + ")", false, ServiceName, ServiceProcessID);
                                             }
                                             //Added by Shah 01_01_2024
