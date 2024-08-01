@@ -1904,7 +1904,8 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? Y = 0;
             if (tbl_GajiBulanan.Count() > 1)
             {
-                Y = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
+                //Y = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
+                Y = tbl_GajiBulanan.Where(x => x.fld_Month < month).Sum(s => s.fld_GajiKasar) - reliefIncentif_Y;
             }
             decimal? reliefIncentif_Y1 = 0m;
             foreach (var incentiveTaxRelief in incentiveTaxReliefs)
