@@ -311,13 +311,36 @@ namespace SalaryGeneratorServices.FuncClass
             {
                 foreach (var CheckNotWorkAct2Data in CheckNotWorkAct2)
                 {
-                    DescActvt = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt).Select(s => s.fld_Keterangan).FirstOrDefault() + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                    Amount = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt).Sum(s => s.fld_Amt);
-                    if (Amount != 0)
+                    if (CheckNotWorkAct2Data.fld_KodAktvt == "11005")
                     {
-                        tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = CheckNotWorkAct2Data.fld_GL, fld_Item = CheckNotWorkAct2Data.fld_NNCC, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
-                        i++;
-                        Contribution = true;
+                        DescActvt = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt && x.fld_Keterangan.Contains("TKA")).Select(s => s.fld_Keterangan).FirstOrDefault() + " (" + GetEstateCOde + ") " + Month + "/" + Year;
+                        Amount = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt && x.fld_Keterangan.Contains("TKA")).Sum(s => s.fld_Amt);
+                        if (Amount != 0)
+                        {
+                            tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = CheckNotWorkAct2Data.fld_GL, fld_Item = CheckNotWorkAct2Data.fld_NNCC, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
+                            i++;
+                            Contribution = true;
+                        }
+
+                        DescActvt = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt && x.fld_Keterangan.Contains("TKT")).Select(s => s.fld_Keterangan).FirstOrDefault() + " (" + GetEstateCOde + ") " + Month + "/" + Year;
+                        Amount = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt && x.fld_Keterangan.Contains("TKT")).Sum(s => s.fld_Amt);
+                        if (Amount != 0)
+                        {
+                            tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = CheckNotWorkAct2Data.fld_GL, fld_Item = CheckNotWorkAct2Data.fld_NNCC, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
+                            i++;
+                            Contribution = true;
+                        }
+                    }
+                    else
+                    {
+                        DescActvt = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt).Select(s => s.fld_Keterangan).FirstOrDefault() + " (" + GetEstateCOde + ") " + Month + "/" + Year;
+                        Amount = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt).Sum(s => s.fld_Amt);
+                        if (Amount != 0)
+                        {
+                            tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = CheckNotWorkAct2Data.fld_GL, fld_Item = CheckNotWorkAct2Data.fld_NNCC, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
+                            i++;
+                            Contribution = true;
+                        }
                     }
                 }
             }
