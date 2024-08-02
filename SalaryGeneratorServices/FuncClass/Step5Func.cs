@@ -436,7 +436,7 @@ namespace SalaryGeneratorServices.FuncClass
                     Amount = ScTrans.Where(x => x.fld_KodAktvt == item.fld_KodAktiviti && x.fld_SapActCode == item.fld_SAPCode).Sum(s => s.fld_Amt);
                     if (Amount != 0)
                     {
-                        var GLNo = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt) && x.fld_GL != "-").Select(s => s.fld_GL).FirstOrDefault();
+                        var GLNo = item.fld_SAPCode;
                         tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = -Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = GLNo, fld_Item = null, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
                         i++;
 
@@ -458,7 +458,7 @@ namespace SalaryGeneratorServices.FuncClass
                     Amount = ScTrans.Where(x => x.fld_KodAktvt == item.fld_KodAktiviti && x.fld_SapActCode == item.fld_SAPCode).Sum(s => s.fld_Amt);
                     if (Amount != 0)
                     {
-                        var GLNo = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt) && x.fld_GL != "-").Select(s => s.fld_GL).FirstOrDefault();
+                        var GLNo = item.fld_SAPCode;
                         tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = -Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = GLNo, fld_Item = null, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
                         i++;
 
