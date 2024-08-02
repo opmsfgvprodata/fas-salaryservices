@@ -695,7 +695,7 @@ namespace SalaryGeneratorServices.FuncClass
                     {
                         var GetSocsoGL = tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodAktiviti == Socso.fldOptConfValue && x.fld_Flag == "1" && x.fld_TypeCode == "GL" && x.fld_Deleted == false).Select(s => s.fld_SAPCode).FirstOrDefault();
                         GetSocsoGL = GetSocsoGL != null ? GetSocsoGL : "-";
-                        AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, Amount, 0, "-", Socso.fldOptConfValue.Substring(0, 2), Socso.fldOptConfValue, Socso.fldOptConfFlag2, Socso.fldOptConfDesc, DTProcess, UserID, Month, Year, "D", 8, GetSocsoGL, "-", GetCostCenter, "-");
+                        AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, Amount, 0, "-", Socso.fldOptConfValue.Substring(0, 2), Socso.fldOptConfValue, Socso.fldOptConfFlag2, Socso.fldOptConfDesc + " - TKT", DTProcess, UserID, Month, Year, "D", 8, GetSocsoGL, "-", GetCostCenter, "-");
                         message = "Transaction Listing (Socso " + Socso.fldOptConfFlag3 + "). (Data - Code Activity : " + Socso.fldOptConfValue + ", Amount : RM " + Amount + ")";
                         Log += i == 1 ? DateTimeFunc.GetDateTime() + " - " + message : "\r\n" + DateTimeFunc.GetDateTime() + " - " + message;
                         i++;
@@ -708,7 +708,7 @@ namespace SalaryGeneratorServices.FuncClass
                 if (AmountMix != 0)
                 {
                     var GetSocsoGL = tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodAktiviti == SocsoMix.fldOptConfValue && x.fld_Flag == "3" && x.fld_TypeCode == "GLTKT" && x.fld_Deleted == false).Select(s => s.fld_SAPCode).FirstOrDefault();
-                    AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, AmountMix, 0, "-", SocsoMix.fldOptConfValue.Substring(0, 2), SocsoMix.fldOptConfValue, SocsoMix.fldOptConfFlag2, SocsoMix.fldOptConfDesc, DTProcess, UserID, Month, Year, "C", 8, GetSocsoGL, "-", "-", "-");
+                    AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, AmountMix, 0, "-", SocsoMix.fldOptConfValue.Substring(0, 2), SocsoMix.fldOptConfValue, SocsoMix.fldOptConfFlag2, SocsoMix.fldOptConfDesc + " - TKT", DTProcess, UserID, Month, Year, "C", 8, GetSocsoGL, "-", "-", "-");
                     message = "Transaction Listing (Socso " + SocsoMix.fldOptConfFlag3 + "). (Data - Code Activity : " + SocsoMix.fldOptConfValue + ", Amount : RM " + AmountMix + ")";
                     Log += i == 1 ? DateTimeFunc.GetDateTime() + " - " + message : "\r\n" + DateTimeFunc.GetDateTime() + " - " + message;
                     i++;
@@ -737,7 +737,7 @@ namespace SalaryGeneratorServices.FuncClass
                     {
                         var GetSocsoGL = tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodAktiviti == Socso.fldOptConfValue && x.fld_Flag == "1" && x.fld_TypeCode == "GL" && x.fld_Deleted == false).Select(s => s.fld_SAPCode).FirstOrDefault();
                         GetSocsoGL = GetSocsoGL != null ? GetSocsoGL : "-";
-                        AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, Amount, 0, "-", Socso.fldOptConfValue.Substring(0, 2), Socso.fldOptConfValue, Socso.fldOptConfFlag2, Socso.fldOptConfDesc, DTProcess, UserID, Month, Year, "D", 8, GetSocsoGL, "-", GetCostCenter, "-");
+                        AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, Amount, 0, "-", Socso.fldOptConfValue.Substring(0, 2), Socso.fldOptConfValue, Socso.fldOptConfFlag2, Socso.fldOptConfDesc + " - TKA", DTProcess, UserID, Month, Year, "D", 8, GetSocsoGL, "-", GetCostCenter, "-");
                         message = "Transaction Listing (Socso " + Socso.fldOptConfFlag3 + "). (Data - Code Activity : " + Socso.fldOptConfValue + ", Amount : RM " + Amount + ")";
                         Log += i == 1 ? DateTimeFunc.GetDateTime() + " - " + message : "\r\n" + DateTimeFunc.GetDateTime() + " - " + message;
                         i++;
@@ -750,7 +750,7 @@ namespace SalaryGeneratorServices.FuncClass
                 if (AmountMix != 0)
                 {
                     var GetSocsoGL = tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodAktiviti == SocsoMix.fldOptConfValue && x.fld_Flag == "3" && x.fld_TypeCode == "GLTKA" && x.fld_Deleted == false).Select(s => s.fld_SAPCode).FirstOrDefault();
-                    AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, AmountMix, 0, "-", SocsoMix.fldOptConfValue.Substring(0, 2), SocsoMix.fldOptConfValue, SocsoMix.fldOptConfFlag2, SocsoMix.fldOptConfDesc, DTProcess, UserID, Month, Year, "C", 8, GetSocsoGL, "-", "-", "-");
+                    AddTo_tbl_Sctran(db2, NegaraID, SyarikatID, WilayahID, LadangID, DivisionID, AmountMix, 0, "-", SocsoMix.fldOptConfValue.Substring(0, 2), SocsoMix.fldOptConfValue, SocsoMix.fldOptConfFlag2, SocsoMix.fldOptConfDesc + " - TKA", DTProcess, UserID, Month, Year, "C", 8, GetSocsoGL, "-", "-", "-");
                     message = "Transaction Listing (Socso " + SocsoMix.fldOptConfFlag3 + "). (Data - Code Activity : " + SocsoMix.fldOptConfValue + ", Amount : RM " + AmountMix + ")";
                     Log += i == 1 ? DateTimeFunc.GetDateTime() + " - " + message : "\r\n" + DateTimeFunc.GetDateTime() + " - " + message;
                     i++;
