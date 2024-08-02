@@ -302,7 +302,7 @@ namespace SalaryGeneratorServices.FuncClass
                 }
             }
 
-            var GetNotWorkActs = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && (x.fld_TypeCode == "GLTKT" || x.fld_TypeCode == "GLTKA" || x.fld_TypeCode == "GL")).ToList();
+            var GetNotWorkActs = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_TypeCode == "GL").ToList();
 
             //Kira Caruman Majikan flag = 1
             var GetNotWorkAct2s = GetNotWorkActs.Where(x => x.fld_Flag == "1" && x.fld_TypeCode == "GL").Select(s => s.fld_KodAktiviti).ToList();
@@ -320,21 +320,26 @@ namespace SalaryGeneratorServices.FuncClass
                         Contribution = true;
                     }
                 }
+            }
 
-                //var CCNo = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WIlayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Flag == "1" && x.fld_TypeCode == "CCGLFINANCE").Select(s => s.fld_SAPCode).FirstOrDefault();
-                //foreach (var GetNotWorkAct2 in GetNotWorkAct2s)
-                //{
-                //    DescActvt = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkAct2).Select(s => s.fld_Keterangan).FirstOrDefault();
-                //    Amount = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkAct2).Sum(s => s.fld_Amt);
-                //    if (Amount != 0)
-                //    {
-                //        var GLCCNo = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkAct2).Select(s => new { s.fld_GL, s.fld_NNCC }).FirstOrDefault();
-                //        //var CCNo = CCNoList.Where(x => x.fld_KodAktiviti == GetNotWorkAct2).Select(s => s.fld_SAPCode).FirstOrDefault();
-                //        tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt, fld_GL = GLCCNo.fld_GL, fld_Item = GLCCNo.fld_NNCC, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
-                //        i++;
-                //        Contribution = true;
-                //    }
-                //}
+            GetNotWorkActs = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_TypeCode == "GLTKA" || x.fld_TypeCode == "GLTKT").ToList();
+
+            //Kira Caruman Majikan flag = 1
+            GetNotWorkAct2s = GetNotWorkActs.Where(x => x.fld_Flag == "1" && x.fld_TypeCode == "GLTKA" || x.fld_TypeCode == "GLTKT").Select(s => s.fld_KodAktiviti).ToList();
+            var CheckNotWorkAct2_2 = ScTrans.Where(x => GetNotWorkAct2s.Contains(x.fld_KodAktvt)).Select(s => new { s.fld_KodAktvt, s.fld_NNCC, s.fld_GL, s.fld_Keterangan }).ToList();
+            if (CheckNotWorkAct2_2.Count > 0)
+            {
+                foreach (var CheckNotWorkAct2Data in CheckNotWorkAct2_2)
+                {
+                    DescActvt = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt && x.fld_Keterangan == CheckNotWorkAct2Data.fld_Keterangan).Select(s => s.fld_Keterangan).FirstOrDefault() + " (" + GetEstateCOde + ") " + Month + "/" + Year;
+                    Amount = ScTrans.Where(x => x.fld_GL == CheckNotWorkAct2Data.fld_GL && x.fld_NNCC == CheckNotWorkAct2Data.fld_NNCC && x.fld_KodAktvt == CheckNotWorkAct2Data.fld_KodAktvt && x.fld_Keterangan == CheckNotWorkAct2Data.fld_Keterangan).Sum(s => s.fld_Amt);
+                    if (Amount != 0)
+                    {
+                        tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = CheckNotWorkAct2Data.fld_GL, fld_Item = CheckNotWorkAct2Data.fld_NNCC, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
+                        i++;
+                        Contribution = true;
+                    }
+                }
             }
 
             //Kira Elaun, Byar Cuti flag = 2
@@ -353,18 +358,6 @@ namespace SalaryGeneratorServices.FuncClass
                         Contribution = true;
                     }
                 }
-                //var CCNo = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WIlayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Flag == "1" && x.fld_TypeCode == "CCGLFINANCE").Select(s => s.fld_SAPCode).FirstOrDefault();
-                //foreach (var GetNotWorkAct3 in CheckNotWorkAct3)
-                //{
-                //    DescActvt = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkAct3.fld_KodAktvt && x.fld_GL == GetNotWorkAct3.fld_GL).Select(s => s.fld_Keterangan).FirstOrDefault();
-                //    Amount = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkAct3.fld_KodAktvt && x.fld_GL == GetNotWorkAct3.fld_GL).Sum(s => s.fld_Amt);
-                //    if (Amount != 0)
-                //    {
-                //        var GLCCNo = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkAct3.fld_KodAktvt && x.fld_GL == GetNotWorkAct3.fld_GL).Select(s => new { s.fld_GL, s.fld_NNCC }).FirstOrDefault();
-                //        tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt, fld_GL = GLCCNo.fld_GL, fld_Item = GLCCNo.fld_NNCC, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
-                //        i++;
-                //    }
-                //}
             }
 
             //Kira Tolakkan
