@@ -437,7 +437,7 @@ namespace SalaryGeneratorServices.FuncClass
                 foreach (var item in GetNotWorkAct4sData)
                 {
                     DescActvt = "Clearing TKT" + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                    Amount = ScTrans.Where(x => x.fld_KodAktvt == item.fld_KodAktiviti && x.fld_SapActCode == item.fld_SAPCode).Sum(s => s.fld_Amt);
+                    Amount = ScTrans.Where(x => x.fld_KodAktvt == item.fld_KodAktiviti && x.fld_GL == item.fld_SAPCode).Sum(s => s.fld_Amt);
                     if (Amount != 0)
                     {
                         var GLNo = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt) && x.fld_GL != "-").Select(s => s.fld_GL).FirstOrDefault();
@@ -459,7 +459,7 @@ namespace SalaryGeneratorServices.FuncClass
                 foreach (var item in GetNotWorkAct4sData)
                 {
                     DescActvt = "Clearing TKA" + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                    Amount = ScTrans.Where(x => x.fld_KodAktvt == item.fld_KodAktiviti && x.fld_SapActCode == item.fld_SAPCode).Sum(s => s.fld_Amt);
+                    Amount = ScTrans.Where(x => x.fld_KodAktvt == item.fld_KodAktiviti && x.fld_GL == item.fld_SAPCode).Sum(s => s.fld_Amt);
                     if (Amount != 0)
                     {
                         var GLNo = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt) && x.fld_GL != "-").Select(s => s.fld_GL).FirstOrDefault();
@@ -571,21 +571,23 @@ namespace SalaryGeneratorServices.FuncClass
 
             var GetNotWorkActs = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_TypeCode == TypeCode).ToList();
 
-            var GetNotWorkCodeAct1s = GetNotWorkActs.Where(x => x.fld_Flag == "1").Select(s => s.fld_KodAktiviti).ToArray();
+            var GetNotWorkCodeAct1s = GetNotWorkActs.Where(x => x.fld_Flag == "1" && x.fld_TypeCode != "GLTKT" && x.fld_TypeCode != "GLTKA").Select(s => s.fld_KodAktiviti).ToArray();
 
             var ScTrans = db2.tbl_Sctran.Where(x => x.fld_Month == Month && x.fld_Year == Year && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_DivisionID == DivisionID).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt, s.fld_Keterangan }).ToList();
 
             var GetWorkActvt = ScTrans.Where(x => x.fld_KodAktvt.Length == 5).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt }).ToList();
 
-            var GLClearings = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Flag == "3" && (x.fld_TypeCode == "GLTKT" || x.fld_TypeCode == "GLTKA" || x.fld_TypeCode == "GL")).Select(s => new { s.fld_SAPCode, s.fld_TypeCode }).Distinct().ToList();
+            var GLClearings = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Flag == "3" && (x.fld_TypeCode == "GL")).Select(s => new { s.fld_SAPCode, s.fld_TypeCode }).Distinct().ToList();
+            var GLClearings2 = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Flag == "3" && (x.fld_TypeCode == "GLTKT" || x.fld_TypeCode == "GLTKA")).Select(s => new { s.fld_SAPCode, s.fld_TypeCode, s.fld_KodAktiviti }).Distinct().ToList();
 
             var GetEstateCOde = db.tbl_Ladang.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WlyhID == WilayahID && x.fld_ID == LadangID).Select(s => s.fld_LdgCode).FirstOrDefault();
 
-            foreach (var Clearing in GLClearings.Where(x=>x.fld_TypeCode == "GL").ToList())
+            foreach (var Clearing in GLClearings.Where(x => x.fld_TypeCode == "GL").ToList())
             {
                 var GLClearing = Clearing.fld_SAPCode;
                 DescActvt = GLKeteranganGajiKawalan + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                Amount = ScTrans.Where(x => GetNotWorkCodeAct1s.Contains(x.fld_KodAktvt) && x.fld_GL == GLClearing).Sum(s => s.fld_Amt);
+                var notContentAct = GLClearings2.Select(s => s.fld_KodAktiviti).Distinct().ToList();
+                Amount = ScTrans.Where(x => GetNotWorkCodeAct1s.Contains(x.fld_KodAktvt) && !notContentAct.Contains(x.fld_KodAktvt) && x.fld_GL == GLClearing).Sum(s => s.fld_Amt);
                 if (Amount != 0)
                 {
                     var GLNo = GLClearing;
@@ -594,12 +596,12 @@ namespace SalaryGeneratorServices.FuncClass
                 }
             }
 
-            foreach (var Clearing in GLClearings.Where(x => x.fld_TypeCode == "GLTKT" || x.fld_TypeCode == "GLTKA").ToList())
+            foreach (var Clearing in GLClearings2.Where(x => x.fld_TypeCode == "GLTKT" || x.fld_TypeCode == "GLTKA").ToList())
             {
                 var GLClearing = Clearing.fld_SAPCode;
                 var typeGL = Clearing.fld_TypeCode == "GLTKA" ? "TKA" : "TKT";
                 DescActvt = GLKeteranganGajiKawalan + " - " + typeGL + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                Amount = ScTrans.Where(x => GetNotWorkCodeAct1s.Contains(x.fld_KodAktvt) && x.fld_GL == GLClearing).Sum(s => s.fld_Amt);
+                Amount = ScTrans.Where(x => x.fld_KodAktvt == Clearing.fld_KodAktiviti && x.fld_GL == GLClearing).Sum(s => s.fld_Amt);
                 if (Amount != 0)
                 {
                     var GLNo = GLClearing;
@@ -614,7 +616,7 @@ namespace SalaryGeneratorServices.FuncClass
                 DeductionStatus = true;
             }
             //Bekaitan Caruman
-
+            GetNotWorkCodeAct1s = GetNotWorkActs.Where(x => x.fld_Flag == "1").Select(s => s.fld_KodAktiviti).ToArray();
             foreach (var GetNotWorkCodeAct1 in GetNotWorkCodeAct1s)
             {
                 DescActvt = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkCodeAct1).Select(s => s.fld_Keterangan).FirstOrDefault() + " (" + GetEstateCOde + ") " + Month + "/" + Year;
