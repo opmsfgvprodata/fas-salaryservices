@@ -20,7 +20,7 @@ namespace SalaryGeneratorServices.FuncClass
         public void GetPkjMastsData(List<tbl_Pkjmast> Pkjmasts)
         {
             tbl_Pkjmasts = Pkjmasts;
-          
+
         }
         //add by Shah 01.01.2024
 
@@ -1877,7 +1877,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? K = 0;
             if (tbl_GajiBulanan.Count() > 1)
             {
-                K = tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
+                K = tbl_GajiBulanan.Where(x => x.fld_Month < month).Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
             }
             decimal? K1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_KWSPPkj).FirstOrDefault();
             decimal? Kt = 0;
@@ -1891,7 +1891,7 @@ namespace SalaryGeneratorServices.FuncClass
             foreach (var incentiveTaxRelief in incentiveTaxReliefs)
             {
                 var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode && x.fld_JenisInsentif != "T").Select(s => s.fld_KodInsentif).ToList();
-                var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year).Sum(s => s.fld_NilaiInsentif);
+                var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year && x.fld_Month < month).Sum(s => s.fld_NilaiInsentif);
                 if (totalIncentive > 0)
                 {
                     if (incentiveTaxRelief.fld_TaxReliefLimit <= totalIncentive)
@@ -1932,9 +1932,9 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? Y2 = Y1;
             decimal? Yt = 0;
 
-            decimal? socso = tbl_GajiBulanan.Where(x => x.fld_Month <= month).Sum(s => s.fld_SocsoPkj);
-            decimal? sip = AllByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SIP").Sum(s => s.fld_CarumanPekerja);
-            decimal? sbkp = AllByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SBKP").Sum(s => s.fld_CarumanPekerja);
+            decimal? socso = tbl_GajiBulanan.Where(x => x.fld_Month < month).Sum(s => s.fld_SocsoPkj);
+            decimal? sip = AllByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SIP" && x.fld_Month < month).Sum(s => s.fld_CarumanPekerja);
+            decimal? sbkp = AllByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SBKP" && x.fld_Month < month).Sum(s => s.fld_CarumanPekerja);
 
             decimal? socso1 = tbl_GajiBulanan.Where(x => x.fld_Month == month).Select(s => s.fld_SocsoPkj).FirstOrDefault();
             decimal? sip1 = CurrentByrCarumanTambahan.Where(x => x.fld_KodCaruman == "SIP").Sum(s => s.fld_CarumanPekerja);
@@ -2107,7 +2107,7 @@ namespace SalaryGeneratorServices.FuncClass
         {
             string maritulStatus = tbl_TaxWorkerInfo.fld_TaxMaritalStatus;
             decimal? KLimit = tbl_TaxRelief.Where(x => x.fld_VariableCode == "K").Select(s => s.fld_TaxReliefLimit).FirstOrDefault();
-            decimal? K = tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj) + tbl_SpecialInsentif.Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
+            decimal? K = tbl_GajiBulanan.Where(x => x.fld_Month < month).Sum(s => s.fld_KWSPPkj) + tbl_SpecialInsentif.Sum(s => s.fld_KWSPPkj) > KLimit ? KLimit : tbl_GajiBulanan.Sum(s => s.fld_KWSPPkj);
             decimal? K1 = tbl_SpecialInsentif.Where(x => x.fld_Month == month && x.fld_KodInsentif == kodInsentif).Select(s => s.fld_KWSPPkj).FirstOrDefault();
             decimal? Kt = 0;
             decimal? n = 12m - decimal.Parse(month.ToString());
@@ -2115,7 +2115,7 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? K2 = (KLimit - (K + K1 + Kt)) / n;
             K2 = K2 > K1 ? K1 : K2;
 
-            decimal? Y = tbl_GajiBulanan.Sum(s => s.fld_GajiKasar) + tbl_SpecialInsentif.Sum(s => s.fld_NilaiInsentif);
+            decimal? Y = tbl_GajiBulanan.Where(x => x.fld_Month < month).Sum(s => s.fld_GajiKasar) + tbl_SpecialInsentif.Sum(s => s.fld_NilaiInsentif);
             decimal? Y1 = tbl_SpecialInsentif.Where(x => x.fld_Month == month && x.fld_KodInsentif == kodInsentif).Select(s => s.fld_NilaiInsentif).FirstOrDefault();
             decimal? Y2 = Y1;
             decimal? Yt = 0;
@@ -2239,7 +2239,7 @@ namespace SalaryGeneratorServices.FuncClass
             db2.Entry(workerSpecialInsentif).State = EntityState.Modified;
             db2.SaveChanges();
         }
-        
+
         public static decimal Round(decimal value)
         {
             var ceiling = Math.Ceiling(value * 20);
