@@ -1962,7 +1962,7 @@ namespace SalaryGeneratorServices.FuncClass
             foreach (var incentiveTaxRelief in incentiveTaxReliefs)
             {
                 var incentiveCode = tbl_JenisInsentif.Where(x => x.fld_TaxReliefCode == incentiveTaxRelief.fld_TaxReliefCode && x.fld_JenisInsentif == "T").Select(s => s.fld_KodInsentif).ToList();
-                var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year).Sum(s => s.fld_NilaiInsentif);
+                var totalIncentive = InsentifExcludePCBYearly.Where(x => incentiveCode.Contains(x.fld_KodInsentif) && x.fld_Year == year && x.fld_Month < month).Sum(s => s.fld_NilaiInsentif);
                 if (totalIncentive > 0)
                 {
                     if (incentiveTaxRelief.fld_TaxReliefLimit >= totalIncentive)
