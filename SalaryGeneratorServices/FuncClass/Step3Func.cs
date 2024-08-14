@@ -1651,17 +1651,17 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? SocsoMjk = 0;
             decimal? SocsoPkj = 0;
 
-            //Check correct socso code
-            int workerAge = CalculateAge(birthdate);
-            var correctSocsoCode = tbl_JenisCarumanSocso.Where(x => workerAge >= x.fld_UmurLower && workerAge <= x.fld_UmurUpper).Select(s => s.fld_KodCaruman).FirstOrDefault();
-            if (correctSocsoCode != KodCaruman)
-            {
-                var worker = db2.tbl_Pkjmast.Where(x => x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj).FirstOrDefault();
-                worker.fld_KodSocso = correctSocsoCode;
-                db2.Entry(worker).State = EntityState.Modified;
-                db.SaveChanges();
-                KodCaruman = correctSocsoCode;
-            }
+            //Check correct socso code //commented 14.08.2024
+            //int workerAge = CalculateAge(birthdate);
+            //var correctSocsoCode = tbl_JenisCarumanSocso.Where(x => workerAge >= x.fld_UmurLower && workerAge <= x.fld_UmurUpper).Select(s => s.fld_KodCaruman).FirstOrDefault();
+            //if (correctSocsoCode != KodCaruman)
+            //{
+            //    var worker = db2.tbl_Pkjmast.Where(x => x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj).FirstOrDefault();
+            //    worker.fld_KodSocso = correctSocsoCode;
+            //    db2.Entry(worker).State = EntityState.Modified;
+            //    db.SaveChanges();
+            //    KodCaruman = correctSocsoCode;
+            //}
 
             if (NoSocso)
             {
