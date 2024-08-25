@@ -218,7 +218,7 @@ namespace SalaryGeneratorServices.FuncClass
             GLKeteranganGajiKawalan = "";
             Contribution = false;
 
-            var ScTrans = db2.tbl_Sctran.Where(x => x.fld_Month == Month && x.fld_Year == Year && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_DivisionID == DivisionID).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt, s.fld_Keterangan }).ToList();
+            var ScTrans = db2.tbl_Sctran.Where(x => x.fld_Month == Month && x.fld_Year == Year && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_DivisionID == DivisionID).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt, s.fld_Keterangan, s.fld_IsCitizen }).ToList();
 
             var GetWorkActvt = ScTrans.Where(x => x.fld_KodAktvt.Length == 4).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt }).ToList();
 
@@ -406,37 +406,20 @@ namespace SalaryGeneratorServices.FuncClass
             }
 
             //Kira Caruman Majikan Pekerja (Kawalan Gaji)
-            var GetNotWorkAct4s = GetNotWorkActs.Where(x => x.fld_Flag == "3" && x.fld_TypeCode == "GL").Select(s => s.fld_KodAktiviti).Distinct().ToList();
-            var CheckNotWorkAct4 = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt)).ToList();
-            if (CheckNotWorkAct4.Count > 0)
-            {
-                //var CCNo = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WIlayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Flag == "1" && x.fld_TypeCode == "CCGLFINANCE").Select(s => s.fld_SAPCode).FirstOrDefault();
-                DescActvt = "Clearing" + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                Amount = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt)).Sum(s => s.fld_Amt);
-                if (Amount != 0)
-                {
-                    var GLNo = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt) && x.fld_GL != "-").Select(s => s.fld_GL).FirstOrDefault();
-                    tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = -Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = GLNo, fld_Item = null, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
-                    i++;
-
-                    GajiKawalan = Amount;
-                    GLGajiKawalan = GLNo;
-                    GLKeteranganGajiKawalan = DescActvt;
-                }
-            }
 
             var GetNotWorkAct4sData = GetNotWorkActs.Where(x => x.fld_Flag == "3" && x.fld_TypeCode == "GLTKT").Select(s => new { s.fld_KodAktiviti, s.fld_SAPCode }).Distinct().ToList();
-            GetNotWorkAct4s = GetNotWorkAct4sData.Select(s => s.fld_KodAktiviti).ToList();
-            CheckNotWorkAct4 = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt)).ToList();
+            var GetNotWorkAct4s = GetNotWorkAct4sData.Select(s => s.fld_KodAktiviti).ToList();
+            var CheckNotWorkAct4 = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt) && x.fld_IsCitizen == true).ToList();
             if (CheckNotWorkAct4.Count > 0)
             {
-                foreach (var item in GetNotWorkAct4sData)
+                foreach (var item in GetNotWorkAct4sData.Select(s => s.fld_SAPCode).Distinct().ToList())
                 {
                     DescActvt = "Clearing TKT" + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                    Amount = ScTrans.Where(x => x.fld_KodAktvt == item.fld_KodAktiviti && x.fld_GL == item.fld_SAPCode).Sum(s => s.fld_Amt);
+                    var activitiesCode = GetNotWorkAct4sData.Where(x=>x.fld_SAPCode == item).Select(s=>s.fld_KodAktiviti).Distinct().ToList();
+                    Amount = ScTrans.Where(x => activitiesCode.Contains(x.fld_KodAktvt) && x.fld_GL == item && x.fld_IsCitizen == true).Sum(s => s.fld_Amt);
                     if (Amount != 0)
                     {
-                        var GLNo = item.fld_SAPCode;
+                        var GLNo = item;
                         tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = -Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = GLNo, fld_Item = null, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
                         i++;
 
@@ -445,20 +428,22 @@ namespace SalaryGeneratorServices.FuncClass
                         GLKeteranganGajiKawalan = DescActvt;
                     }
                 }
+
             }
 
             GetNotWorkAct4sData = GetNotWorkActs.Where(x => x.fld_Flag == "3" && x.fld_TypeCode == "GLTKA").Select(s => new { s.fld_KodAktiviti, s.fld_SAPCode }).Distinct().ToList();
             GetNotWorkAct4s = GetNotWorkAct4sData.Select(s => s.fld_KodAktiviti).ToList();
-            CheckNotWorkAct4 = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt)).ToList();
+            CheckNotWorkAct4 = ScTrans.Where(x => GetNotWorkAct4s.Contains(x.fld_KodAktvt) && x.fld_IsCitizen == false).ToList();
             if (CheckNotWorkAct4.Count > 0)
             {
-                foreach (var item in GetNotWorkAct4sData)
+                foreach (var item in GetNotWorkAct4sData.Select(s => s.fld_SAPCode).Distinct().ToList())
                 {
                     DescActvt = "Clearing TKA" + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                    Amount = ScTrans.Where(x => x.fld_KodAktvt == item.fld_KodAktiviti && x.fld_GL == item.fld_SAPCode).Sum(s => s.fld_Amt);
+                    var activitiesCode = GetNotWorkAct4sData.Where(x => x.fld_SAPCode == item).Select(s => s.fld_KodAktiviti).Distinct().ToList();
+                    Amount = ScTrans.Where(x => activitiesCode.Contains(x.fld_KodAktvt) && x.fld_GL == item && x.fld_IsCitizen == false).Sum(s => s.fld_Amt);
                     if (Amount != 0)
                     {
-                        var GLNo = item.fld_SAPCode;
+                        var GLNo = item;
                         tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = -Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = GLNo, fld_Item = null, fld_ItemNo = i, fld_Purpose = "1", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
                         i++;
 
@@ -569,39 +554,45 @@ namespace SalaryGeneratorServices.FuncClass
 
             var GetNotWorkCodeAct1s = GetNotWorkActs.Where(x => x.fld_Flag == "1" && x.fld_TypeCode != "GLTKT" && x.fld_TypeCode != "GLTKA").Select(s => s.fld_KodAktiviti).ToArray();
 
-            var ScTrans = db2.tbl_Sctran.Where(x => x.fld_Month == Month && x.fld_Year == Year && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_DivisionID == DivisionID).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt, s.fld_Keterangan }).ToList();
+            var ScTrans = db2.tbl_Sctran.Where(x => x.fld_Month == Month && x.fld_Year == Year && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_DivisionID == DivisionID && x.fld_IsCitizen != null).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt, s.fld_Keterangan, s.fld_IsCitizen }).ToList();
 
-            var GetWorkActvt = ScTrans.Where(x => x.fld_KodAktvt.Length == 5).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt }).ToList();
+            var GetWorkActvt = ScTrans.Where(x => x.fld_KodAktvt.Length == 5).Select(s => new { s.fld_NNCC, s.fld_GL, s.fld_SapActCode, s.fld_Amt, s.fld_KodAktvt, s.fld_IsCitizen }).ToList();
 
-            var GLClearings = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Flag == "3" && (x.fld_TypeCode == "GL")).Select(s => new { s.fld_SAPCode, s.fld_TypeCode }).Distinct().ToList();
+            //var GLClearings = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Flag == "3" && (x.fld_TypeCode == "GL")).Select(s => new { s.fld_SAPCode, s.fld_TypeCode }).Distinct().ToList();
             var GLClearings2 = db.tbl_CustomerVendorGLMap.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_Flag == "3" && (x.fld_TypeCode == "GLTKT" || x.fld_TypeCode == "GLTKA")).Select(s => new { s.fld_SAPCode, s.fld_TypeCode, s.fld_KodAktiviti }).Distinct().ToList();
 
             var GetEstateCOde = db.tbl_Ladang.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WlyhID == WilayahID && x.fld_ID == LadangID).Select(s => s.fld_LdgCode).FirstOrDefault();
 
-            foreach (var Clearing in GLClearings.Where(x => x.fld_TypeCode == "GL").ToList())
-            {
-                var GLClearing = Clearing.fld_SAPCode;
-                DescActvt = GLKeteranganGajiKawalan + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                var notContentAct = GLClearings2.Select(s => s.fld_KodAktiviti).Distinct().ToList();
-                Amount = ScTrans.Where(x => GetNotWorkCodeAct1s.Contains(x.fld_KodAktvt) && !notContentAct.Contains(x.fld_KodAktvt) && x.fld_GL == GLClearing).Sum(s => s.fld_Amt);
-                if (Amount != 0)
-                {
-                    var GLNo = GLClearing;
-                    tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = GLNo, fld_Item = null, fld_ItemNo = i, fld_Purpose = "2", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
-                    i++;
-                }
-            }
+            //foreach (var Clearing in GLClearings.Where(x => x.fld_TypeCode == "GL").ToList())
+            //{
+            //    var GLClearing = Clearing.fld_SAPCode;
+            //    DescActvt = GLKeteranganGajiKawalan + " (" + GetEstateCOde + ") " + Month + "/" + Year;
+            //    var notContentAct = GLClearings2.Select(s => s.fld_KodAktiviti).Distinct().ToList();
+            //    Amount = ScTrans.Where(x => GetNotWorkCodeAct1s.Contains(x.fld_KodAktvt) && !notContentAct.Contains(x.fld_KodAktvt) && x.fld_GL == GLClearing).Sum(s => s.fld_Amt);
+            //    if (Amount != 0)
+            //    {
+            //        var GLNo = GLClearing;
+            //        tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = GLNo, fld_Item = null, fld_ItemNo = i, fld_Purpose = "2", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
+            //        i++;
+            //    }
+            //}
 
-            foreach (var Clearing in GLClearings2.Where(x => x.fld_TypeCode == "GLTKT" || x.fld_TypeCode == "GLTKA").ToList())
+            foreach (var Clearing in GLClearings2.ToList())
             {
                 var GLClearing = Clearing.fld_SAPCode;
                 var typeGL = Clearing.fld_TypeCode == "GLTKA" ? "TKA" : "TKT";
-                DescActvt = GLKeteranganGajiKawalan + " - " + typeGL + " (" + GetEstateCOde + ") " + Month + "/" + Year;
                 Amount = ScTrans.Where(x => x.fld_KodAktvt == Clearing.fld_KodAktiviti && x.fld_GL == GLClearing).Sum(s => s.fld_Amt);
                 if (Amount != 0)
                 {
+                    var mainDescActvt = ScTrans.Where(x => x.fld_KodAktvt == Clearing.fld_KodAktiviti).Select(s => s.fld_Keterangan).FirstOrDefault().ToUpper().Replace("(EMPLOYEE AND EMPLOYER) - TKA", "").Replace("(EMPLOYEE AND EMPLOYER) - TKT", "").Replace("(EMPLOYEE AND EMPLOYER)", "");
                     var GLNo = GLClearing;
+                    DescActvt = "CLEARING " + mainDescActvt + " - " + typeGL + " (" + GetEstateCOde + ") " + Month + "/" + Year;
                     tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = GLNo, fld_Item = null, fld_ItemNo = i, fld_Purpose = "2", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
+                    i++;
+
+                    DescActvt = mainDescActvt + " - " + typeGL + " (" + GetEstateCOde + ") " + Month + "/" + Year;
+                    var GLNo1 = GetNotWorkActs.Where(x => x.fld_KodAktiviti == Clearing.fld_KodAktiviti).Select(s => s.fld_SAPCode).FirstOrDefault();
+                    tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = -Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = null, fld_Item = GLNo1, fld_ItemNo = i, fld_Purpose = "2", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
                     i++;
                 }
             }
@@ -611,19 +602,19 @@ namespace SalaryGeneratorServices.FuncClass
                 BalAmountDeduct = GajiKawalan - Amount;
                 DeductionStatus = true;
             }
-            //Bekaitan Caruman
-            GetNotWorkCodeAct1s = GetNotWorkActs.Where(x => x.fld_Flag == "1").Select(s => s.fld_KodAktiviti).ToArray();
-            foreach (var GetNotWorkCodeAct1 in GetNotWorkCodeAct1s)
-            {
-                DescActvt = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkCodeAct1).Select(s => s.fld_Keterangan).FirstOrDefault() + " (" + GetEstateCOde + ") " + Month + "/" + Year;
-                Amount = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkCodeAct1).Sum(s => s.fld_Amt);
-                if (Amount != 0)
-                {
-                    var GLNo1 = GetNotWorkActs.Where(x => x.fld_KodAktiviti == GetNotWorkCodeAct1).Select(s => s.fld_SAPCode).FirstOrDefault();
-                    tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = -Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = null, fld_Item = GLNo1, fld_ItemNo = i, fld_Purpose = "2", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
-                    i++;
-                }
-            }
+            ////Bekaitan Caruman
+            //GetNotWorkCodeAct1s = GetNotWorkActs.Where(x => x.fld_Flag == "1").Select(s => s.fld_KodAktiviti).ToArray();
+            //foreach (var GetNotWorkCodeAct1 in GetNotWorkCodeAct1s)
+            //{
+            //    DescActvt = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkCodeAct1).Select(s => s.fld_Keterangan).FirstOrDefault() + " (" + GetEstateCOde + ") " + Month + "/" + Year;
+            //    Amount = ScTrans.Where(x => x.fld_KodAktvt == GetNotWorkCodeAct1).Sum(s => s.fld_Amt);
+            //    if (Amount != 0)
+            //    {
+            //        var GLNo1 = GetNotWorkActs.Where(x => x.fld_KodAktiviti == GetNotWorkCodeAct1).Select(s => s.fld_SAPCode).FirstOrDefault();
+            //        tbl_SAPPostDataDetails.Add(new tbl_SAPPostDataDetails() { fld_Amount = -Amount, fld_Currency = "RM", fld_Desc = DescActvt.ToUpper(), fld_GL = null, fld_Item = GLNo1, fld_ItemNo = i, fld_Purpose = "2", fld_SAPActivityCode = null, fld_SAPPostRefID = SAPPostID1 });
+            //        i++;
+            //    }
+            //}
             db2.tbl_SAPPostDataDetails.AddRange(tbl_SAPPostDataDetails);
             db2.SaveChanges();
         }

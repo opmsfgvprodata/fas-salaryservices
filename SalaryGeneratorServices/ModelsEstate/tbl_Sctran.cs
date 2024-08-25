@@ -66,5 +66,7 @@ namespace SalaryGeneratorServices.ModelsEstate
 
         [StringLength(10)]
         public string fld_SapActCode { get; set; }
+
+        public bool? fld_IsCitizen { get; set; }
     }
 }
