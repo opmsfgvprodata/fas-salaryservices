@@ -2070,7 +2070,7 @@ namespace SalaryGeneratorServices.FuncClass
             {
                 B = MRB.fld_Category2_B;
             }
-            X = tbl_ByrCarumanTambahan.Where(x => x.fld_Month != month).Sum(s => s.fld_CarumanPekerja);
+            X = tbl_ByrCarumanTambahan.Where(x => x.fld_Month < month && x.fld_KodCaruman == "PCB").Sum(s => s.fld_CarumanPekerja);
 
             PCBM = (((P - M) * R + B) - (Z + X)) / (n + 1);
             PCBM = PCBM < 10 ? 0 : PCBM;
