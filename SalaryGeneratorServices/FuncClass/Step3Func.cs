@@ -1705,6 +1705,53 @@ namespace SalaryGeneratorServices.FuncClass
             return CustMod_Socso;
         }
 
+        public async Task<CustMod_Socso> GetSocsoForBonusFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, string KodCaruman, bool NoSocso, List<tbl_Socso> tbl_Socso, tbl_SpecialInsentif tbl_SpecialInsentif)
+        {
+            GetConnectFunc conn = new GetConnectFunc();
+            string host, catalog, user, pass = "";
+            conn.GetConnection(out host, out catalog, out user, out pass, WilayahID, SyarikatID, NegaraID);
+            GenSalaryModelEstate db2 = GenSalaryModelEstate.ConnectToSqlServer(host, catalog, user, pass);
+            decimal? TotalSalaryForSocso = 0;
+            decimal? SocsoMjk = 0;
+            decimal? SocsoPkj = 0;
+
+            if (NoSocso)
+            {
+                SocsoMjk = 0;
+                SocsoPkj = 0;
+            }
+            else
+            {
+                TotalSalaryForSocso = tbl_SpecialInsentif.fld_NilaiInsentif;
+
+                var GetCarumanSocso = tbl_Socso.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_KodCaruman == KodCaruman && TotalSalaryForSocso >= x.fld_KdrLower && TotalSalaryForSocso <= x.fld_KdrUpper).FirstOrDefault();
+                if (GetCarumanSocso != null)
+                {
+                    SocsoMjk = GetCarumanSocso.fld_SocsoMjkn;
+                    SocsoPkj = GetCarumanSocso.fld_SocsoPkj;
+                }
+                else
+                {
+                    SocsoMjk = 0;
+                    SocsoPkj = 0;
+                }
+            }
+
+            tbl_SpecialInsentif.fld_SocsoMjk = SocsoMjk;
+            tbl_SpecialInsentif.fld_SocsoPkj = SocsoPkj;
+            db2.Entry(tbl_SpecialInsentif).State = EntityState.Modified;
+            await db2.SaveChangesAsync();
+
+            var CustMod_Socso = new CustMod_Socso
+            {
+                SocsoMjk = SocsoMjk,
+                SocsoPkj = SocsoPkj
+            };
+            db2.Dispose();
+            return CustMod_Socso;
+        }
+
+
         static int CalculateAge(DateTime? birthdate)
         {
             // Get today's date
@@ -1858,11 +1905,9 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? TotalPkjCont = 0;
             TotalMjkCont = 0;
             TotalPkjCont = 0;
-            decimal? TotalSalaryForOtherContribution = 0;
 
             var GetOtherContributions = tbl_PkjCarumanTambahan.Where(x => x.fld_Nopkj == NoPkj && x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Deleted == false).ToList();
 
-            decimal? ContriMjk = 0;
             decimal? ContriPkj = 0;
             foreach (var GetOtherContribution in GetOtherContributions)
             {
