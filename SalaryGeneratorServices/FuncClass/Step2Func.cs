@@ -221,33 +221,47 @@ namespace SalaryGeneratorServices.FuncClass
             secondNo = decimal.Parse(OTCulData.Where(x => x.fldOptConfFlag2 == "2").Select(s => s.fldOptConfValue).FirstOrDefault());
             thirdNo = decimal.Parse(OTKadar.Where(x => x.fldOptConfFlag2 == AttCode).Select(s => s.fldOptConfValue).FirstOrDefault());
 
-            decimal? SalaryIncrement = tbl_PkjIncrmntSalary.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_AppStatus == true).Select(s => s.fld_IncrmntSalary).FirstOrDefault();
+            //commented by faeza 29.10.2024
+            //decimal? SalaryIncrement = tbl_PkjIncrmntSalary.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_AppStatus == true).Select(s => s.fld_IncrmntSalary).FirstOrDefault();
 
+            //if (GetLastMonthAverageSalary != null || GetLastMonthAverageSalary == 0)
+            //{
+            //    if (GetLastMonthAverageSalary < GetMinPay)
+            //    {
+            //        GetLastMonthAverageSalary = GetMinPay;
+            //        if (SalaryIncrement != null)
+            //        {
+            //            GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (SalaryIncrement != null)
+            //        {
+            //            GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    GetLastMonthAverageSalary = GetMinPay;
+            //    if (SalaryIncrement != null)
+            //    {
+            //        GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
+            //    }
+            //}
+
+            //add by faeza 29.10.2024
             if (GetLastMonthAverageSalary != null || GetLastMonthAverageSalary == 0)
             {
                 if (GetLastMonthAverageSalary < GetMinPay)
                 {
                     GetLastMonthAverageSalary = GetMinPay;
-                    if (SalaryIncrement != null)
-                    {
-                        GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
-                    }
-                }
-                else
-                {
-                    if (SalaryIncrement != null)
-                    {
-                        GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
-                    }
                 }
             }
             else
             {
                 GetLastMonthAverageSalary = GetMinPay;
-                if (SalaryIncrement != null)
-                {
-                    GetLastMonthAverageSalary = GetLastMonthAverageSalary + SalaryIncrement;
-                }
             }
 
             AfterRounded = (GetLastMonthAverageSalary / secondNo) * thirdNo;
