@@ -1963,7 +1963,8 @@ namespace SalaryGeneratorServices.FuncClass
             decimal? Kt = 0;
             decimal? n = 12m - decimal.Parse(month.ToString());
             decimal? n1 = 12m - decimal.Parse(month.ToString()) + 1;
-            decimal? K2 = (KLimit - (K + K1 + Kt)) / n;
+            //decimal? K2 = (KLimit - (K + K1 + Kt)) / n;
+            decimal? K2 = month == 12 ? 0 : (KLimit - (K + K1 + Kt)) / n;
             K2 = K2 > K1 ? K1 : K2;
 
             var incentiveTaxReliefs = tbl_TaxRelief.Where(x => x.fld_VariableCode == "ExcludePCB").ToList();
