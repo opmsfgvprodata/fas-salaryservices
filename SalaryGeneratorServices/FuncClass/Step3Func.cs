@@ -20,7 +20,7 @@ namespace SalaryGeneratorServices.FuncClass
         public void GetPkjMastsData(List<tbl_Pkjmast> Pkjmasts)
         {
             tbl_Pkjmasts = Pkjmasts;
-          
+
         }
         //add by Shah 01.01.2024
 
@@ -1938,6 +1938,13 @@ namespace SalaryGeneratorServices.FuncClass
 
             }
 
+            if (GetOtherContributions.Count() == 0)
+            {
+                var workerSpecialInsentif = tbl_SpecialInsentif.Where(x => x.fld_Month == Month && x.fld_KodInsentif == kodInsentif).FirstOrDefault();
+                workerSpecialInsentif.fld_GajiBersih = workerSpecialInsentif.fld_GajiKasar;
+                db2.Entry(workerSpecialInsentif).State = EntityState.Modified;
+                await db2.SaveChangesAsync();
+            }
 
             var CustMod_OthrCon = new CustMod_OthrCon
             {
@@ -2321,7 +2328,7 @@ namespace SalaryGeneratorServices.FuncClass
             db2.Entry(workerSpecialInsentif).State = EntityState.Modified;
             db2.SaveChanges();
         }
-        
+
         public static decimal Round(decimal value)
         {
             var ceiling = Math.Ceiling(value * 20);
