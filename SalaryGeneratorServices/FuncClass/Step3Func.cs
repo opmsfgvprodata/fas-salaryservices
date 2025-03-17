@@ -1892,7 +1892,7 @@ namespace SalaryGeneratorServices.FuncClass
             return CustMod_OthrCon;
         }
 
-        public async Task<CustMod_OthrCon> GetOtherContributionsBonusFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, List<tbl_PkjCarumanTambahan> tbl_PkjCarumanTambahan, List<tbl_SubCarumanTambahan> tbl_SubCarumanTambahan, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahanList, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo, List<tbl_SpecialInsentif> tbl_SpecialInsentif, string kodInsentif)
+        public async Task<CustMod_OthrCon> GetOtherContributionsBonusFunc(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? UserID, DateTime DTProcess, int? Month, int? Year, string processname, string servicesname, int? ClientID, string NoPkj, List<tbl_PkjCarumanTambahan> tbl_PkjCarumanTambahan, List<tbl_SubCarumanTambahan> tbl_SubCarumanTambahan, List<tbl_JadualCarumanTambahan> tbl_JadualCarumanTambahanList, List<tbl_TaxRelief> tbl_TaxRelief, tbl_TaxWorkerInfo tbl_TaxWorkerInfo, List<tbl_SpecialInsentif> tbl_SpecialInsentif, string kodInsentif, List<tbl_JenisInsentif> tbl_JenisInsentif, bool? isExcludePCBContribution)
         {
             GenSalaryModelHQ db = new GenSalaryModelHQ();
             GetConnectFunc conn = new GetConnectFunc();
@@ -1912,7 +1912,7 @@ namespace SalaryGeneratorServices.FuncClass
             foreach (var GetOtherContribution in GetOtherContributions)
             {
                 //Added by Shah 01_01_2024
-                if (GetOtherContribution.fld_KodCaruman == "PCB" && GetOtherContribution.fld_KodSubCaruman == "PCB02")
+                if (GetOtherContribution.fld_KodCaruman == "PCB" && GetOtherContribution.fld_KodSubCaruman == "PCB02" && isExcludePCBContribution == false)
                 {
                     if (tbl_TaxWorkerInfo.fld_TaxResidency == "1")
                     {
@@ -1938,7 +1938,7 @@ namespace SalaryGeneratorServices.FuncClass
 
             }
 
-            if (GetOtherContributions.Count() == 0)
+            if (GetOtherContributions.Count() == 0 || isExcludePCBContribution == true)
             {
                 var workerSpecialInsentif = tbl_SpecialInsentif.Where(x => x.fld_Month == Month && x.fld_KodInsentif == kodInsentif).FirstOrDefault();
                 workerSpecialInsentif.fld_GajiBersih = workerSpecialInsentif.fld_GajiKasar;

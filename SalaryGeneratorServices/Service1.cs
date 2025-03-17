@@ -660,8 +660,9 @@ namespace SalaryGeneratorServices
                                 }
                                 if (workerSpecialInsentif != null)
                                 {
+                                    var isExcludePCBContribution = tbl_JenisInsentifSpecial.Where(x => x.fld_KodInsentif == item.fld_KodInsentif).Select(s=>s.fld_ExcludePCB).FirstOrDefault();
                                     var taxWorkerInfo = tbl_TaxWorkerInfo.Where(x => x.fld_NopkjPermanent == Pkjmstlist.fld_NopkjPermanent).FirstOrDefault();
-                                    var CustMod_OthrCon = await Step3Func.GetOtherContributionsBonusFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), tbl_PkjCarumanTambahan, tbl_SubCarumanTambahan, tbl_JadualCarumanTambahan, tbl_TaxRelief, taxWorkerInfo, workerSpecialInsentifs.Where(x => x.fld_Nopkj == Pkjmstlist.fld_Nopkj).ToList(), item.fld_KodInsentif);
+                                    var CustMod_OthrCon = await Step3Func.GetOtherContributionsBonusFunc(NegaraID, SyarikatID, WilayahID, LadangID, UserID, DateTimeFunc.GetDateTime(), Month, Year, getservicesdetail.fld_SevicesActivity, getservicesdetail.fld_ServicesName, getservicesdetail.fld_ClientID, Pkjmstlist.fld_Nopkj.Trim(), tbl_PkjCarumanTambahan, tbl_SubCarumanTambahan, tbl_JadualCarumanTambahan, tbl_TaxRelief, taxWorkerInfo, workerSpecialInsentifs.Where(x => x.fld_Nopkj == Pkjmstlist.fld_Nopkj).ToList(), item.fld_KodInsentif, tbl_JenisInsentifSpecial, isExcludePCBContribution);
                                 }
                             }
                         }
