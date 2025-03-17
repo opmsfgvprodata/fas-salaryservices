@@ -95,7 +95,7 @@ namespace SalaryGeneratorServices.FuncClass
                 {
                     KerjaBonus = null;
                 }
-                
+
             }
             else
             {
@@ -339,6 +339,46 @@ namespace SalaryGeneratorServices.FuncClass
                 SpecialInsentifData.fld_SocsoPkj = 0;
                 SpecialInsentifData.fld_GajiKasar = SpecialInsentifList2.fld_NilaiInsentif;
                 SpecialInsentifData.fld_GajiBersih = 0;
+                SpecialInsentifData.fld_B = 0;
+                SpecialInsentifData.fld_C = 0;
+                SpecialInsentifData.fld_D = 0;
+                SpecialInsentifData.fld_Du = 0;
+                SpecialInsentifData.fld_K = 0;
+                SpecialInsentifData.fld_K1 = 0;
+                SpecialInsentifData.fld_K2 = 0;
+                SpecialInsentifData.fld_Kt = 0;
+                SpecialInsentifData.fld_LP = 0;
+                SpecialInsentifData.fld_LP1 = 0;
+                SpecialInsentifData.fld_M = 0;
+                SpecialInsentifData.fld_n = 0;
+                SpecialInsentifData.fld_n1 = 0;
+                SpecialInsentifData.fld_P = 0;
+                SpecialInsentifData.fld_Q = 0;
+                SpecialInsentifData.fld_R = 0;
+                SpecialInsentifData.fld_S = 0;
+                SpecialInsentifData.fld_Su = 0;
+                SpecialInsentifData.fld_X = 0;
+                SpecialInsentifData.fld_Y = 0;
+                SpecialInsentifData.fld_Y1 = 0;
+                SpecialInsentifData.fld_Y2 = 0;
+                SpecialInsentifData.fld_Yt = 0;
+                SpecialInsentifData.fld_Z = 0;
+                SpecialInsentifData.fld_ChildAbove18CertFull = 0;
+                SpecialInsentifData.fld_ChildAbove18CertHalf = 0;
+                SpecialInsentifData.fld_ChildAbove18HigherFull = 0;
+                SpecialInsentifData.fld_ChildAbove18HigherHalf = 0;
+                SpecialInsentifData.fld_ChildBelow18Full = 0;
+                SpecialInsentifData.fld_ChildBelow18Half = 0;
+                SpecialInsentifData.fld_DisabledChildFull = 0;
+                SpecialInsentifData.fld_DisabledChildHalf = 0;
+                SpecialInsentifData.fld_DisabledChildStudyFull = 0;
+                SpecialInsentifData.fld_DisabledChildStudyHalf = 0;
+                SpecialInsentifData.fld_IsIndividuOKU = "";
+                SpecialInsentifData.fld_IsSpouseOKU = "";
+                SpecialInsentifData.fld_TaxMaritalStatus = "";
+                SpecialInsentifData.fld_CarumanPekerjaNet = 0;
+                SpecialInsentifData.fld_CarumanPekerjaYearly = 0;
+                SpecialInsentifData.fld_PCBCarumanPekerja = 0;
                 SpecialInsentif = SpecialInsentifData;
             }
             else
@@ -400,7 +440,7 @@ namespace SalaryGeneratorServices.FuncClass
 
         //added by faeza 26.02.2023
         public async Task AddTo_tbl_SpecialInsentif(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, List<tbl_SpecialInsentif> SpecialInsentif)
-        {            
+        {
             GetConnectFunc conn = new GetConnectFunc();
             string host, catalog, user, pass = "";
             conn.GetConnection(out host, out catalog, out user, out pass, WilayahID, SyarikatID, NegaraID);
@@ -408,7 +448,7 @@ namespace SalaryGeneratorServices.FuncClass
 
             db2.tbl_SpecialInsentif.AddRange(SpecialInsentif);
             await db2.SaveChangesAsync();
-            db2.Dispose();          
+            db2.Dispose();
         }
 
         public async Task<List<tbl_SpecialInsentif>> GetSpecialInsentif(int? NegaraID, int? SyarikatID, int? WilayahID, int? LadangID, int? Month, int? Year)
@@ -418,7 +458,7 @@ namespace SalaryGeneratorServices.FuncClass
             conn.GetConnection(out host, out catalog, out user, out pass, WilayahID, SyarikatID, NegaraID);
             GenSalaryModelEstate db2 = GenSalaryModelEstate.ConnectToSqlServer(host, catalog, user, pass);
 
-            var specialInsentif = await db2.tbl_SpecialInsentif.Where(x=>x.fld_LadangID == LadangID && x.fld_Year == Year).ToListAsync();
+            var specialInsentif = await db2.tbl_SpecialInsentif.Where(x => x.fld_LadangID == LadangID && x.fld_Year == Year).ToListAsync();
             db2.Dispose();
             return specialInsentif;
         }
