@@ -317,6 +317,9 @@ namespace SalaryGeneratorServices.FuncClass
             var KodInsentifSpecial = tbl_JenisInsentifSpecial.Select(s => s.fld_KodInsentif).ToList();
             var SpecialInsentifList = tbl_Insentif.Where(x => x.fld_NegaraID == NegaraID && x.fld_SyarikatID == SyarikatID && x.fld_WilayahID == WilayahID && x.fld_LadangID == LadangID && x.fld_Nopkj == NoPkj && x.fld_Month == Month && x.fld_Year == Year && x.fld_Deleted == false && KodInsentifSpecial.Contains(x.fld_KodInsentif)).ToList();
 
+            var selectedKodSpecialInsentif = SpecialInsentifList.Select(s => s.fld_KodInsentif).ToList();
+            var isExcludePCB = tbl_JenisInsentifSpecial.Any(x => selectedKodSpecialInsentif.Contains(x.fld_KodInsentif) && x.fld_ExcludePCB == true);
+
             if (SpecialInsentifList.Count != 0)
             {
                 var SpecialInsentifList2 = SpecialInsentifList.First();
@@ -379,6 +382,7 @@ namespace SalaryGeneratorServices.FuncClass
                 SpecialInsentifData.fld_CarumanPekerjaNet = 0;
                 SpecialInsentifData.fld_CarumanPekerjaYearly = 0;
                 SpecialInsentifData.fld_PCBCarumanPekerja = 0;
+                SpecialInsentifData.fld_ExcludePCB = isExcludePCB;
                 SpecialInsentif = SpecialInsentifData;
             }
             else

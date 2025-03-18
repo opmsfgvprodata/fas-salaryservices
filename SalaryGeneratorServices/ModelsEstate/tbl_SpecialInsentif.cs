@@ -141,5 +141,7 @@ namespace SalaryGeneratorServices.ModelsEstate
 
         [Column(TypeName = "numeric")]
         public decimal? fld_GajiBersih { get; set; }
+
+        public bool? fld_ExcludePCB { get; set; }
     }
 }
